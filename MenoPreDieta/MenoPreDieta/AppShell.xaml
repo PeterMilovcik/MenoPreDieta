@@ -3,8 +3,30 @@
     x:Class="MenoPreDieta.AppShell"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:views="clr-namespace:MenoPreDieta.Views">
+    xmlns:views="clr-namespace:MenoPreDieta.Views"
+    BackgroundColor="{DynamicResource Primary}">
+    <FlyoutItem Title="Hlavná stránka">
+        <Tab>
+            <ShellContent>
+                <views:MainPage />
+            </ShellContent>
+        </Tab>
+    </FlyoutItem>
     <FlyoutItem Title="Meno pre chlapca">
+        <Tab>
+            <ShellContent>
+                <views:MainPage />
+            </ShellContent>
+        </Tab>
+    </FlyoutItem>
+    <FlyoutItem Title="Meno pre dievča">
+        <Tab>
+            <ShellContent>
+                <views:MainPage />
+            </ShellContent>
+        </Tab>
+    </FlyoutItem>
+    <FlyoutItem Title="Nastavenia">
         <Tab>
             <ShellContent>
                 <views:MainPage />
