@@ -1,6 +1,4 @@
-﻿using System;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
+﻿using Xamarin.Forms;
 
 namespace MenoPreDieta
 {
@@ -9,8 +7,7 @@ namespace MenoPreDieta
         public App()
         {
             InitializeComponent();
-
-            MainPage = new MainPage();
+            MainPage = new AppShell();
         }
 
         protected override void OnStart()
