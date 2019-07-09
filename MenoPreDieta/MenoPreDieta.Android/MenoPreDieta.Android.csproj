@@ -3,9 +3,9 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6B0457F1-B4FF-4939-B05A-929AB068D94F}</ProjectGuid>
+    <ProjectGuid>{B62A96A7-6DB9-4434-9A89-E62B225D9847}</ProjectGuid>
     <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <TemplateGuid>{6968b3a4-1835-46a3-ac5c-1ae33b475983}</TemplateGuid>
+    <TemplateGuid>{c9e5eea5-ca05-42a1-839b-61506e0a37df}</TemplateGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>MenoPreDieta.Droid</RootNamespace>
     <AssemblyName>MenoPreDieta.Android</AssemblyName>
@@ -46,20 +46,18 @@
     <Reference Include="Mono.Android" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.Numerics.Vectors" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Xamarin.Forms" Version="4.0.0.425677" />
-    <PackageReference Include="Xamarin.Android.Support.ViewPager" Version="28.0.0.1" />
     <PackageReference Include="Xamarin.Android.Support.Design" Version="28.0.0.1" />
     <PackageReference Include="Xamarin.Android.Support.v7.AppCompat" Version="28.0.0.1" />
     <PackageReference Include="Xamarin.Android.Support.v4" Version="28.0.0.1" />
     <PackageReference Include="Xamarin.Android.Support.v7.CardView" Version="28.0.0.1" />
     <PackageReference Include="Xamarin.Android.Support.v7.MediaRouter" Version="28.0.0.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="Xamarin.Android.Support.Core.Utils" Version="28.0.0.1" />
     <PackageReference Include="Xamarin.Android.Support.CustomTabs" Version="28.0.0.1" />
     <PackageReference Include="Xamarin.Essentials" Version="1.1.0" />
@@ -91,11 +89,9 @@
     <AndroidResource Include="Resources\mipmap-xxhdpi\launcher_foreground.png" />
     <AndroidResource Include="Resources\mipmap-xxxhdpi\icon.png" />
     <AndroidResource Include="Resources\mipmap-xxxhdpi\launcher_foreground.png" />
-    <AndroidResource Include="Resources\drawable\xamarin_logo.png" />
-    <AndroidResource Include="Resources\drawable\tab_about.png" />
-    <AndroidResource Include="Resources\drawable\tab_feed.png" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Resources\drawable\" />
     <Folder Include="Resources\drawable-hdpi\" />
     <Folder Include="Resources\drawable-xhdpi\" />
     <Folder Include="Resources\drawable-xxhdpi\" />
@@ -103,7 +99,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MenoPreDieta\MenoPreDieta.csproj">
-      <Project>{7A95BC59-B60F-40D0-9C15-665422F66B9B}</Project>
+      <Project>{D26F17B9-C4AB-4A5D-A309-75E0B7D4F8FE}</Project>
       <Name>MenoPreDieta</Name>
     </ProjectReference>
   </ItemGroup>
