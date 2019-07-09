@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29025.244
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MenoPreDieta.Android", "MenoPreDieta\MenoPreDieta.Android\MenoPreDieta.Android.csproj", "{6B0457F1-B4FF-4939-B05A-929AB068D94F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MenoPreDieta.MobileAppService", "MenoPreDieta\MenoPreDieta.MobileAppService\MenoPreDieta.MobileAppService.csproj", "{E6907A93-0F9C-4C0E-B624-CD61C5A32066}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MenoPreDieta", "MenoPreDieta\MenoPreDieta\MenoPreDieta.csproj", "{7600425F-35DF-4F0A-A5D4-47418CA1B362}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6B0457F1-B4FF-4939-B05A-929AB068D94F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B0457F1-B4FF-4939-B05A-929AB068D94F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B0457F1-B4FF-4939-B05A-929AB068D94F}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{6B0457F1-B4FF-4939-B05A-929AB068D94F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B0457F1-B4FF-4939-B05A-929AB068D94F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B0457F1-B4FF-4939-B05A-929AB068D94F}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{E6907A93-0F9C-4C0E-B624-CD61C5A32066}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6907A93-0F9C-4C0E-B624-CD61C5A32066}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6907A93-0F9C-4C0E-B624-CD61C5A32066}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{E6907A93-0F9C-4C0E-B624-CD61C5A32066}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6907A93-0F9C-4C0E-B624-CD61C5A32066}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6907A93-0F9C-4C0E-B624-CD61C5A32066}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{7600425F-35DF-4F0A-A5D4-47418CA1B362}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7600425F-35DF-4F0A-A5D4-47418CA1B362}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7600425F-35DF-4F0A-A5D4-47418CA1B362}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{7600425F-35DF-4F0A-A5D4-47418CA1B362}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7600425F-35DF-4F0A-A5D4-47418CA1B362}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7600425F-35DF-4F0A-A5D4-47418CA1B362}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6D5A419C-2AA3-4BEB-8235-0F7CA78C79F9}
+	EndGlobalSection
+EndGlobal
