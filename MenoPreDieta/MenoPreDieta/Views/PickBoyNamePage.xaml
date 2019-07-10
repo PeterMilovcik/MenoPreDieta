@@ -13,28 +13,30 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
+                <RowDefinition Height="80" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="80" />
             </Grid.RowDefinitions>
 
-            <Label
-                Grid.Row="0"
+            <Button
+                Grid.Row="1"
                 Grid.Column="0"
+                Margin="0"
+                BackgroundColor="Transparent"
                 FontSize="Large"
                 HorizontalOptions="FillAndExpand"
-                HorizontalTextAlignment="Center"
                 Text="FirstName"
-                VerticalOptions="FillAndExpand"
-                VerticalTextAlignment="Center" />
+                VerticalOptions="FillAndExpand" />
 
-            <Label
-                Grid.Row="0"
+            <Button
+                Grid.Row="1"
                 Grid.Column="1"
+                Margin="0"
+                BackgroundColor="Transparent"
                 FontSize="Large"
                 HorizontalOptions="FillAndExpand"
-                HorizontalTextAlignment="Center"
                 Text="SecondName"
-                VerticalOptions="FillAndExpand"
-                VerticalTextAlignment="Center" />
+                VerticalOptions="FillAndExpand" />
 
             <fab:FloatingActionButtonView
                 Grid.Row="0"
@@ -42,10 +44,8 @@
                 ColorNormal="{DynamicResource Red}"
                 ColorPressed="{DynamicResource RedDark}"
                 ColorRipple="{DynamicResource RedDark}"
-                HasShadow="True"
                 HorizontalOptions="Start"
-                ImageName="ic_thumb_down_white.png"
-                VerticalOptions="Start" />
+                ImageName="ic_clear_gray.png" />
 
             <fab:FloatingActionButtonView
                 Grid.Row="0"
@@ -53,32 +53,35 @@
                 ColorNormal="{DynamicResource Red}"
                 ColorPressed="{DynamicResource RedDark}"
                 ColorRipple="{DynamicResource RedDark}"
-                HasShadow="True"
                 HorizontalOptions="End"
-                ImageName="ic_thumb_down_white.png"
-                VerticalOptions="Start" />
+                ImageName="ic_clear_gray.png" />
 
-            <fab:FloatingActionButtonView
-                Grid.Row="0"
+            <StackLayout
+                Grid.Row="2"
                 Grid.Column="0"
-                ColorNormal="{DynamicResource Green}"
-                ColorPressed="{DynamicResource GreenDark}"
-                ColorRipple="{DynamicResource GreenDark}"
-                HasShadow="True"
-                HorizontalOptions="Start"
-                ImageName="ic_thumb_up_white.png"
-                VerticalOptions="End" />
+                Grid.ColumnSpan="2"
+                HorizontalOptions="Center"
+                Orientation="Horizontal"
+                VerticalOptions="End">
 
-            <fab:FloatingActionButtonView
-                Grid.Row="0"
-                Grid.Column="1"
-                ColorNormal="{DynamicResource Green}"
-                ColorPressed="{DynamicResource GreenDark}"
-                ColorRipple="{DynamicResource GreenDark}"
-                HasShadow="True"
-                HorizontalOptions="End"
-                ImageName="ic_thumb_up_white.png"
-                VerticalOptions="End" />
+                <Label FontSize="Small" Text="SPOLU:" />
+                <Label
+                    FontAttributes="Bold"
+                    FontSize="Small"
+                    Text="0" />
+
+                <Label FontSize="Small" Text="OSTÁVA:" />
+                <Label
+                    FontAttributes="Bold"
+                    FontSize="Small"
+                    Text="0" />
+
+                <Label FontSize="Small" Text="PRESNOSŤ:" />
+                <Label
+                    FontAttributes="Bold"
+                    FontSize="Small"
+                    Text="0%" />
+            </StackLayout>
 
         </Grid>
 
