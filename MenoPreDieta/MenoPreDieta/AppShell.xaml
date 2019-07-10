@@ -15,14 +15,14 @@
     <FlyoutItem Title="Meno pre chlapca">
         <Tab>
             <ShellContent>
-                <views:MainPage />
+                <views:PickBoyNamePage />
             </ShellContent>
         </Tab>
     </FlyoutItem>
     <FlyoutItem Title="Meno pre dievča">
         <Tab>
             <ShellContent>
-                <views:MainPage />
+                <views:PickGirlNamePage />
             </ShellContent>
         </Tab>
     </FlyoutItem>
