@@ -14,6 +14,12 @@
 
             <Color x:Key="Blue">#2196f3</Color>
             <Color x:Key="Pink">#e91e63</Color>
+            <Color x:Key="Red">#f44336</Color>
+            <Color x:Key="RedDark">#d32f2f</Color>
+            <Color x:Key="Green">#43a047</Color>
+            <Color x:Key="GreenDark">#2e7d32</Color>
+            <Color x:Key="DeepPurple">#9575cd</Color>
+            <Color x:Key="DeepPurpleDark">#673ab7</Color>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -3,14 +3,118 @@
     x:Class="MenoPreDieta.Views.PickBoyNamePage"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:fab="clr-namespace:Refractored.FabControl;assembly=Refractored.FabControl"
     Title="Meno pre chlapca"
     Shell.BackgroundColor="{DynamicResource Blue}">
     <ContentPage.Content>
-        <StackLayout>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
             <Label
-                HorizontalOptions="CenterAndExpand"
-                Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" />
-        </StackLayout>
+                Grid.Row="0"
+                Grid.Column="0"
+                FontSize="Large"
+                HorizontalOptions="FillAndExpand"
+                HorizontalTextAlignment="Center"
+                Text="FirstName"
+                VerticalOptions="FillAndExpand"
+                VerticalTextAlignment="Center" />
+
+            <Label
+                Grid.Row="0"
+                Grid.Column="1"
+                FontSize="Large"
+                HorizontalOptions="FillAndExpand"
+                HorizontalTextAlignment="Center"
+                Text="SecondName"
+                VerticalOptions="FillAndExpand"
+                VerticalTextAlignment="Center" />
+
+            <fab:FloatingActionButtonView
+                Grid.Row="0"
+                Grid.Column="0"
+                ColorNormal="{DynamicResource Red}"
+                ColorPressed="{DynamicResource RedDark}"
+                ColorRipple="{DynamicResource RedDark}"
+                HasShadow="True"
+                HorizontalOptions="Start"
+                ImageName="ic_thumb_down_white.png"
+                VerticalOptions="Start" />
+
+            <fab:FloatingActionButtonView
+                Grid.Row="0"
+                Grid.Column="1"
+                ColorNormal="{DynamicResource Red}"
+                ColorPressed="{DynamicResource RedDark}"
+                ColorRipple="{DynamicResource RedDark}"
+                HasShadow="True"
+                HorizontalOptions="End"
+                ImageName="ic_thumb_down_white.png"
+                VerticalOptions="Start" />
+
+            <fab:FloatingActionButtonView
+                Grid.Row="0"
+                Grid.Column="0"
+                ColorNormal="{DynamicResource Green}"
+                ColorPressed="{DynamicResource GreenDark}"
+                ColorRipple="{DynamicResource GreenDark}"
+                HasShadow="True"
+                HorizontalOptions="Start"
+                ImageName="ic_thumb_up_white.png"
+                VerticalOptions="End" />
+
+            <fab:FloatingActionButtonView
+                Grid.Row="0"
+                Grid.Column="1"
+                ColorNormal="{DynamicResource Green}"
+                ColorPressed="{DynamicResource GreenDark}"
+                ColorRipple="{DynamicResource GreenDark}"
+                HasShadow="True"
+                HorizontalOptions="End"
+                ImageName="ic_thumb_up_white.png"
+                VerticalOptions="End" />
+
+        </Grid>
+
+
+
+        <!--<Button
+                x:Name="SecondNameButton"
+                RelativeLayout.HeightConstraint="{ConstraintExpression Factor=1,
+                                                                       Type=RelativeToParent,
+                                                                       Property=Height,
+                                                                       Constant=-40}"
+                RelativeLayout.WidthConstraint="{ConstraintExpression Factor=.5,
+                                                                      Type=RelativeToParent,
+                                                                      Property=Width,
+                                                                      Constant=-40}"
+                RelativeLayout.XConstraint="{ConstraintExpression Factor=1,
+                                                                  Type=RelativeToParent,
+                                                                  Property=Width,
+                                                                  Constant=-40}"
+                RelativeLayout.YConstraint="{ConstraintExpression Factor=1,
+                                                                  Type=RelativeToParent,
+                                                                  Property=Y,
+                                                                  Constant=40}"
+                Text="SecondName" />-->
+
+        <!--<fab:FloatingActionButtonView
+                ColorNormal="{DynamicResource Red}"
+                ColorPressed="{DynamicResource RedDark}"
+                ColorRipple="{DynamicResource RedDark}"
+                RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent,
+                                                                  Factor=1,
+                                                                  Property=Width,
+                                                                  Constant=-100}"
+                RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent,
+                                                                  Factor=1,
+                                                                  Property=Y}" />-->
+
     </ContentPage.Content>
 </ContentPage>
