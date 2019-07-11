@@ -6,10 +6,16 @@
     xmlns:views="clr-namespace:MenoPreDieta.Views;assembly=MenoPreDieta"
     Title="Ktoré meno pre chlapca sa ti páči viac?"
     Shell.BackgroundColor="{DynamicResource Blue}">
-    <!--<ContentPage.ToolbarItems>
+    <ContentPage.ToolbarItems>
         <ToolbarItem
-            IconImageSource="ic_action_format_list_numbered.png" />
-    </ContentPage.ToolbarItems>-->
+            Command="{Binding ResetCommand}"
+            IconImageSource="ic_reset.png"
+            Text="Začať odznova" />
+        <ToolbarItem
+            Command="{Binding ShowRankedNamesCommand}"
+            IconImageSource="ic_action_format_list_numbered.png"
+            Text="Rebríček mien" />
+    </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <views:PickNameView />
     </ContentPage.Content>

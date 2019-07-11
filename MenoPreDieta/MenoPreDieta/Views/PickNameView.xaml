@@ -105,7 +105,8 @@
                 HorizontalOptions="Center"
                 IsRunning="{Binding IsBusy}"
                 VerticalOptions="Center"
-                WidthRequest="75" />
+                WidthRequest="75"
+                Color="{Binding GenderColor}" />
 
         </Grid>
 

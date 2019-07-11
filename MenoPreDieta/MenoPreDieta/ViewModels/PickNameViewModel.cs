@@ -22,6 +22,7 @@ namespace MenoPreDieta.ViewModels
         private NamePickEntity namePick;
         private bool isBusy;
         private bool isEnabled;
+        private Color genderColor;
 
         protected PickNameViewModel()
         {
@@ -117,6 +118,17 @@ namespace MenoPreDieta.ViewModels
             {
                 if (value == isEnabled) return;
                 isEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Color GenderColor
+        {
+            get => genderColor;
+            set
+            {
+                if (value.Equals(genderColor)) return;
+                genderColor = value;
                 OnPropertyChanged();
             }
         }
