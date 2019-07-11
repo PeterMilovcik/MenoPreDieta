@@ -28,13 +28,8 @@ namespace MenoPreDieta
             var names = await Database.GetNamesAsync();
             if (!names.Any())
             {
-                await AddNamesToDatabaseAsync();
+                await Database.InsertNamesAsync(new AllNames());
             }
-        }
-
-        private async Task AddNamesToDatabaseAsync()
-        {
-            
         }
 
         protected override void OnSleep()

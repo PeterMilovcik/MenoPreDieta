@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using MenoPreDieta.Entities;
 using MenoPreDieta.Models;
 
 namespace MenoPreDieta.ViewModels
@@ -42,6 +44,13 @@ namespace MenoPreDieta.ViewModels
             }
         }
 
-        public abstract Task LoadAsync();
+        public virtual async Task LoadAsync()
+        {
+            var names = await App.Database.GetNamesAsync();
+            var genderNames = names.Where(name => name.Gender == GetGender());
+            NamesCount = genderNames.Count();
+        }
+
+        protected abstract Gender GetGender();
     }
 }

@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using MenoPreDieta.Entities;
+﻿using MenoPreDieta.Entities;
 using MenoPreDieta.Models;
 
 namespace MenoPreDieta.ViewModels
@@ -13,11 +11,6 @@ namespace MenoPreDieta.ViewModels
             Second = new NameModel("TestSecondName");
         }
 
-        public override async Task LoadAsync()
-        {
-            var names = await App.Database.GetNamesAsync();
-            var boyNames = names.Where(name => name.Gender == Gender.Boy);
-            NamesCount = boyNames.Count();
-        }
+        protected override Gender GetGender() => Gender.Boy;
     }
 }
