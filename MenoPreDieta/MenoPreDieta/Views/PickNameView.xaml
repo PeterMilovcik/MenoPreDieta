@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ContentView
+    x:Class="MenoPreDieta.Views.PickNameView"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:fab="clr-namespace:Refractored.FabControl;assembly=Refractored.FabControl"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <ContentView.Content>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="80" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="80" />
+            </Grid.RowDefinitions>
+
+            <Button
+                Grid.Row="1"
+                Grid.Column="0"
+                Margin="0"
+                BackgroundColor="Transparent"
+                FontSize="Large"
+                HorizontalOptions="FillAndExpand"
+                Text="FirstName"
+                VerticalOptions="FillAndExpand" />
+
+            <Button
+                Grid.Row="1"
+                Grid.Column="1"
+                Margin="0"
+                BackgroundColor="Transparent"
+                FontSize="Large"
+                HorizontalOptions="FillAndExpand"
+                Text="SecondName"
+                VerticalOptions="FillAndExpand" />
+
+            <fab:FloatingActionButtonView
+                Grid.Row="0"
+                Grid.Column="0"
+                ColorNormal="{DynamicResource Red}"
+                ColorPressed="{DynamicResource RedDark}"
+                ColorRipple="{DynamicResource RedDark}"
+                HorizontalOptions="Start"
+                ImageName="ic_clear_gray.png" />
+
+            <fab:FloatingActionButtonView
+                Grid.Row="0"
+                Grid.Column="1"
+                ColorNormal="{DynamicResource Red}"
+                ColorPressed="{DynamicResource RedDark}"
+                ColorRipple="{DynamicResource RedDark}"
+                HorizontalOptions="End"
+                ImageName="ic_clear_gray.png" />
+
+            <StackLayout
+                Grid.Row="2"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                HorizontalOptions="Center"
+                Orientation="Horizontal"
+                VerticalOptions="End">
+
+                <Label FontSize="Small" Text="MENÁ:" />
+                <Label
+                    FontAttributes="Bold"
+                    FontSize="Small"
+                    Text="0" />
+
+                <Label FontSize="Small" Text="SPOLU:" />
+                <Label
+                    FontAttributes="Bold"
+                    FontSize="Small"
+                    Text="0" />
+
+                <Label FontSize="Small" Text="OSTÁVA:" />
+                <Label
+                    FontAttributes="Bold"
+                    FontSize="Small"
+                    Text="0" />
+
+                <Label FontSize="Small" Text="PRESNOSŤ:" />
+                <Label
+                    FontAttributes="Bold"
+                    FontSize="Small"
+                    Text="0%" />
+
+            </StackLayout>
+
+        </Grid>
+
+    </ContentView.Content>
+</ContentView>
