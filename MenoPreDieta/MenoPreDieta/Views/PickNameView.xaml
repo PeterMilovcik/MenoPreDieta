@@ -17,15 +17,16 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="80" />
                 <RowDefinition Height="*" />
-                <RowDefinition Height="80" />
+                <RowDefinition Height="40" />
             </Grid.RowDefinitions>
 
             <Button
                 Grid.Row="1"
                 Grid.Column="0"
-                Margin="0"
-                BackgroundColor="Transparent"
+                Margin="20,0,10,0"
+                BackgroundColor="{Binding GenderColor}"
                 Command="{Binding PickFirstNameCommand}"
+                CornerRadius="30"
                 FontSize="Large"
                 HorizontalOptions="FillAndExpand"
                 Text="{Binding First.Name}"
@@ -34,9 +35,10 @@
             <Button
                 Grid.Row="1"
                 Grid.Column="1"
-                Margin="0"
-                BackgroundColor="Transparent"
+                Margin="10,0,20,0"
+                BackgroundColor="{Binding GenderColor}"
                 Command="{Binding PickSecondNameCommand}"
+                CornerRadius="30"
                 FontSize="Large"
                 HorizontalOptions="FillAndExpand"
                 Text="{Binding Second.Name}"
@@ -50,7 +52,7 @@
                 ColorRipple="{DynamicResource RedDark}"
                 Command="{Binding RemoveFirstNameCommand}"
                 HorizontalOptions="Start"
-                ImageName="ic_clear_gray.png" />
+                ImageName="ic_clear_white.png" />
 
             <fab:FloatingActionButtonView
                 Grid.Row="0"
@@ -60,7 +62,7 @@
                 ColorRipple="{DynamicResource RedDark}"
                 Command="{Binding RemoveSecondNameCommand}"
                 HorizontalOptions="End"
-                ImageName="ic_clear_gray.png" />
+                ImageName="ic_clear_white.png" />
 
             <StackLayout
                 Grid.Row="2"
@@ -98,14 +100,13 @@
 
             <ActivityIndicator
                 Grid.Row="0"
-                Grid.RowSpan="3"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
-                HeightRequest="75"
+                HeightRequest="70"
                 HorizontalOptions="Center"
                 IsRunning="{Binding IsBusy}"
                 VerticalOptions="Center"
-                WidthRequest="75"
+                WidthRequest="70"
                 Color="{Binding GenderColor}" />
 
         </Grid>

@@ -8,18 +8,19 @@
     mc:Ignorable="d">
     <Application.Resources>
         <ResourceDictionary>
-            <Color x:Key="Primary">#43a047</Color>
-            <Color x:Key="PrimaryDark">#1b5e20</Color>
+            <Color x:Key="Primary">#a1887f</Color>
+            <Color x:Key="PrimaryDark">#795548</Color>
             <Color x:Key="Accent">#00c853</Color>
 
             <Color x:Key="Blue">#2196f3</Color>
-            <Color x:Key="Pink">#e91e63</Color>
-            <Color x:Key="Red">#f44336</Color>
-            <Color x:Key="RedDark">#d32f2f</Color>
+            <Color x:Key="BlueLight">#bbdefb</Color>
+            <Color x:Key="Pink">#f06292</Color>
+            <Color x:Key="PinkLight">#f8bbd0</Color>
+            <Color x:Key="Red">#c62828</Color>
+            <Color x:Key="RedDark">#b71c1c</Color>
             <Color x:Key="Green">#43a047</Color>
             <Color x:Key="GreenDark">#2e7d32</Color>
-            <Color x:Key="DeepPurple">#9575cd</Color>
-            <Color x:Key="DeepPurpleDark">#673ab7</Color>
+            <Color x:Key="BrownLight">#a1887f</Color>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

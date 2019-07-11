@@ -7,7 +7,7 @@ namespace MenoPreDieta.ViewModels
     {
         public PickGirlNameViewModel()
         {
-            GenderColor = (Color)Application.Current.Resources["Pink"];
+            GenderColor = (Color)Application.Current.Resources["PinkLight"];
         }
 
         protected override Gender GetGender() => Gender.Girl;
