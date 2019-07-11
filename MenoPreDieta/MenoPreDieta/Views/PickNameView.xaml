@@ -48,6 +48,7 @@
                 ColorNormal="{DynamicResource Red}"
                 ColorPressed="{DynamicResource RedDark}"
                 ColorRipple="{DynamicResource RedDark}"
+                Command="{Binding RemoveFirstNameCommand}"
                 HorizontalOptions="Start"
                 ImageName="ic_clear_gray.png" />
 
@@ -57,6 +58,7 @@
                 ColorNormal="{DynamicResource Red}"
                 ColorPressed="{DynamicResource RedDark}"
                 ColorRipple="{DynamicResource RedDark}"
+                Command="{Binding RemoveSecondNameCommand}"
                 HorizontalOptions="End"
                 ImageName="ic_clear_gray.png" />
 

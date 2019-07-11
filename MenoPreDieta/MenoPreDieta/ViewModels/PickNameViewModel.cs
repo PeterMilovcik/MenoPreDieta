@@ -26,6 +26,8 @@ namespace MenoPreDieta.ViewModels
             random = new Random();
             PickFirstNameCommand = new Command(async () => await PickFirstNameAsync());
             PickSecondNameCommand = new Command(async () => await PickSecondNameAsync());
+            RemoveFirstNameCommand = new Command(async () => await RemoveFirstNameAsync());
+            RemoveSecondNameCommand = new Command(async () => await RemoveSecondNameAsync());
         }
 
         public NameModel First
@@ -98,6 +100,10 @@ namespace MenoPreDieta.ViewModels
 
         public Command PickSecondNameCommand { get; }
 
+        public Command RemoveFirstNameCommand { get; }
+
+        public Command RemoveSecondNameCommand { get; }
+
         public virtual async Task LoadAsync()
         {
             var names = await App.Database.GetNamesAsync();
@@ -121,7 +127,7 @@ namespace MenoPreDieta.ViewModels
                 await App.Database.InsertNamePicksAsync(pickPairs);
             }
 
-            ChooseNamesToPick();
+            Update();
         }
 
         private async Task PickFirstNameAsync()
@@ -129,7 +135,7 @@ namespace MenoPreDieta.ViewModels
             namePick.PickedNameId = namePick.FirstNameId;
             namePick.IsNamePicked = true;
             await App.Database.UpdateNamePickAsync(namePick);
-            ChooseNamesToPick();
+            Update();
         }
 
         private async Task PickSecondNameAsync()
@@ -137,27 +143,62 @@ namespace MenoPreDieta.ViewModels
             namePick.PickedNameId = namePick.SecondNameId;
             namePick.IsNamePicked = true;
             await App.Database.UpdateNamePickAsync(namePick);
-            ChooseNamesToPick();
+            Update();
         }
 
-        private void ChooseNamesToPick()
+        private async Task RemoveFirstNameAsync()
         {
-            var notPickedNamePairs = pickPairs.Where(pair => !pair.IsNamePicked).ToList();
-            if (notPickedNamePairs.Any())
+            if (First == null) return;
+            var pairsToRemove = pickPairs.Where(pair => pair.FirstNameId == First.Id || pair.SecondNameId == First.Id);
+            await RemovePairs(pairsToRemove);
+            var namePicks = await App.Database.GetNamePicksAsync();
+            pickPairs = namePicks.Where(namePick => genderNames.Any(name => name.Id == namePick.FirstNameId)).ToList();
+            Update();
+        }
+
+        private async Task RemoveSecondNameAsync()
+        {
+            if (Second == null) return;
+            var pairsToRemove = pickPairs.Where(pair => pair.FirstNameId == Second.Id || pair.SecondNameId == Second.Id);
+            await RemovePairs(pairsToRemove);
+            var namePicks = await App.Database.GetNamePicksAsync();
+            pickPairs = namePicks.Where(namePick => genderNames.Any(name => name.Id == namePick.FirstNameId)).ToList();
+            Update();
+        }
+
+        private static async Task RemovePairs(IEnumerable<NamePickEntity> pairsToRemove)
+        {
+            foreach (var pairToRemove in pairsToRemove)
             {
-                namePick = notPickedNamePairs[random.Next(notPickedNamePairs.Count - 1)];
-                var firstName = genderNames.Single(name => name.Id == namePick.FirstNameId);
-                First = new NameModel(firstName.Id, firstName.Value);
-                var secondName = genderNames.Single(name => name.Id == namePick.SecondNameId);
-                Second = new NameModel(secondName.Id, secondName.Value);
+                await App.Database.DeleteNamePickAsync(pairToRemove);
             }
-            else
+        }
+
+        private void Update()
+        {
+            try
             {
-                namePick = null;
+                var notPickedNamePairs = pickPairs.Where(pair => !pair.IsNamePicked).ToList();
+                if (notPickedNamePairs.Any())
+                {
+                    namePick = notPickedNamePairs[random.Next(notPickedNamePairs.Count - 1)];
+                    var firstName = genderNames.Single(name => name.Id == namePick.FirstNameId);
+                    First = new NameModel(firstName.Id, firstName.Value);
+                    var secondName = genderNames.Single(name => name.Id == namePick.SecondNameId);
+                    Second = new NameModel(secondName.Id, secondName.Value);
+                }
+                else
+                {
+                    namePick = null;
+                }
+                PairsCount = pickPairs.Count;
+                RemainingPairsCount = pickPairs.Count(pickPair => !pickPair.IsNamePicked);
+                Accuracy = PairsCount > 0 ? 1 - (double)RemainingPairsCount / PairsCount : 0;
             }
-            PairsCount = pickPairs.Count;
-            RemainingPairsCount = pickPairs.Count(pickPair => !pickPair.IsNamePicked);
-            Accuracy = PairsCount > 0 ? 1 - (double)RemainingPairsCount / PairsCount : 0;
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         protected abstract Gender GetGender();
