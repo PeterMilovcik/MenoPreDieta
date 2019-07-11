@@ -3,13 +3,9 @@
     x:Class="MenoPreDieta.Views.PickBoyNamePage"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:viewModels="clr-namespace:MenoPreDieta.ViewModels;assembly=MenoPreDieta"
     xmlns:views="clr-namespace:MenoPreDieta.Views;assembly=MenoPreDieta"
     Title="Ktoré meno pre chlapca sa ti páči viac?"
     Shell.BackgroundColor="{DynamicResource Blue}">
-    <ContentPage.BindingContext>
-        <viewModels:PickBoyNameViewModel />
-    </ContentPage.BindingContext>
     <ContentPage.Content>
         <views:PickNameView />
     </ContentPage.Content>

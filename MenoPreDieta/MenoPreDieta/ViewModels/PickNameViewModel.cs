@@ -1,11 +1,13 @@
-﻿using MenoPreDieta.Models;
+﻿using System.Threading.Tasks;
+using MenoPreDieta.Models;
 
 namespace MenoPreDieta.ViewModels
 {
-    public class PickNameViewModel : ViewModel
+    public abstract class PickNameViewModel : ViewModel
     {
         private NameModel first;
         private NameModel second;
+        private int namesCount;
 
         public NameModel First
         {
@@ -28,5 +30,18 @@ namespace MenoPreDieta.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        public int NamesCount
+        {
+            get => namesCount;
+            set
+            {
+                if (value == namesCount) return;
+                namesCount = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public abstract Task LoadAsync();
     }
 }
