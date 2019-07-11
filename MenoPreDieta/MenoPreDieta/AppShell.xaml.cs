@@ -1,5 +1,5 @@
-﻿using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
+﻿using MenoPreDieta.Views;
+using Xamarin.Forms;
 
 namespace MenoPreDieta
 {
@@ -8,6 +8,14 @@ namespace MenoPreDieta
         public AppShell()
         {
             InitializeComponent();
+            RegisterRoutes();
+        }
+
+        private void RegisterRoutes()
+        {
+            Routing.RegisterRoute(nameof(PickBoyNamePage), typeof(PickBoyNamePage));
+            Routing.RegisterRoute(nameof(PickGirlNamePage), typeof(PickGirlNamePage));
+            Routing.RegisterRoute(nameof(MainPage), typeof(MainPage));
         }
     }
 }

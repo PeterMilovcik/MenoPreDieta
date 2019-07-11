@@ -3,7 +3,11 @@
     x:Class="MenoPreDieta.Views.MainPage"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:viewModels="clr-namespace:MenoPreDieta.ViewModels;assembly=MenoPreDieta"
     Title="Pre koho ideme vybrať meno?">
+    <ContentPage.BindingContext>
+        <viewModels:MainViewModel />
+    </ContentPage.BindingContext>
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -19,6 +23,7 @@
             Grid.Column="0"
             Margin="30,30,15,30"
             BackgroundColor="{StaticResource Blue}"
+            Command="{Binding PickBoyNameCommand}"
             CornerRadius="5"
             FontSize="Large"
             HorizontalOptions="FillAndExpand"
@@ -30,6 +35,7 @@
             Grid.Column="1"
             Margin="15,30,30,30"
             BackgroundColor="{StaticResource Pink}"
+            Command="{Binding PickGirlNameCommand}"
             CornerRadius="5"
             FontSize="Large"
             HorizontalOptions="FillAndExpand"
