@@ -96,6 +96,17 @@
 
             </StackLayout>
 
+            <ActivityIndicator
+                Grid.Row="0"
+                Grid.RowSpan="3"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                HeightRequest="75"
+                HorizontalOptions="Center"
+                IsRunning="{Binding IsBusy}"
+                VerticalOptions="Center"
+                WidthRequest="75" />
+
         </Grid>
 
     </ContentView.Content>

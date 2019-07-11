@@ -6,6 +6,10 @@
     xmlns:views="clr-namespace:MenoPreDieta.Views;assembly=MenoPreDieta"
     Title="Ktoré meno pre chlapca sa ti páči viac?"
     Shell.BackgroundColor="{DynamicResource Blue}">
+    <!--<ContentPage.ToolbarItems>
+        <ToolbarItem
+            IconImageSource="ic_action_format_list_numbered.png" />
+    </ContentPage.ToolbarItems>-->
     <ContentPage.Content>
         <views:PickNameView />
     </ContentPage.Content>
