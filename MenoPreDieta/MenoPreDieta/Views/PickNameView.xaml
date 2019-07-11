@@ -72,11 +72,11 @@
                     FontSize="Small"
                     Text="{Binding NamesCount}" />
 
-                <Label FontSize="Small" Text="SPOLU:" />
+                <Label FontSize="Small" Text="DVOJICE:" />
                 <Label
                     FontAttributes="Bold"
                     FontSize="Small"
-                    Text="0" />
+                    Text="{Binding PairsCount}" />
 
                 <Label FontSize="Small" Text="OSTÁVA:" />
                 <Label
