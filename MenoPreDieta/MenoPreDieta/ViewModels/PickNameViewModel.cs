@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MenoPreDieta.Entities;
 using MenoPreDieta.Models;
+using Xamarin.Forms;
 
 namespace MenoPreDieta.ViewModels
 {
@@ -23,6 +24,8 @@ namespace MenoPreDieta.ViewModels
         protected PickNameViewModel()
         {
             random = new Random();
+            PickFirstNameCommand = new Command(async () => await PickFirstNameAsync());
+            PickSecondNameCommand = new Command(async () => await PickSecondNameAsync());
         }
 
         public NameModel First
@@ -91,6 +94,10 @@ namespace MenoPreDieta.ViewModels
             }
         }
 
+        public Command PickFirstNameCommand { get; }
+
+        public Command PickSecondNameCommand { get; }
+
         public virtual async Task LoadAsync()
         {
             var names = await App.Database.GetNamesAsync();
@@ -114,10 +121,22 @@ namespace MenoPreDieta.ViewModels
                 await App.Database.InsertNamePicksAsync(pickPairs);
             }
 
-            PairsCount = pickPairs.Count;
-            RemainingPairsCount = pickPairs.Count(pickPair => !pickPair.IsNamePicked);
-            Accuracy = PairsCount > 0 ? 1 - (double) RemainingPairsCount / PairsCount : 0;
+            ChooseNamesToPick();
+        }
 
+        private async Task PickFirstNameAsync()
+        {
+            namePick.PickedNameId = namePick.FirstNameId;
+            namePick.IsNamePicked = true;
+            await App.Database.UpdateNamePickAsync(namePick);
+            ChooseNamesToPick();
+        }
+
+        private async Task PickSecondNameAsync()
+        {
+            namePick.PickedNameId = namePick.SecondNameId;
+            namePick.IsNamePicked = true;
+            await App.Database.UpdateNamePickAsync(namePick);
             ChooseNamesToPick();
         }
 
@@ -136,6 +155,9 @@ namespace MenoPreDieta.ViewModels
             {
                 namePick = null;
             }
+            PairsCount = pickPairs.Count;
+            RemainingPairsCount = pickPairs.Count(pickPair => !pickPair.IsNamePicked);
+            Accuracy = PairsCount > 0 ? 1 - (double)RemainingPairsCount / PairsCount : 0;
         }
 
         protected abstract Gender GetGender();
