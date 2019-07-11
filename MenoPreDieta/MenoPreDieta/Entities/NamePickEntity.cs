@@ -10,5 +10,6 @@ namespace MenoPreDieta.Entities
         public int SecondNameId { get; set; }
         public int PickedNameId { get; set; }
         public bool IsNamePicked { get; set; }
+        public Gender Gender { get; set; }
     }
 }

@@ -143,16 +143,19 @@ namespace MenoPreDieta.ViewModels
 
         public abstract Command ShowRankedNamesCommand { get; }
 
+        public abstract Command ResetCommand { get; }
+
         public virtual async Task LoadAsync()
         {
             try
             {
                 IsBusy = true;
                 var names = await App.Database.GetNamesAsync();
-                genderNames = names.Where(name => name.Gender == GetGender()).ToList();
+                var gender = GetGender();
+                genderNames = names.Where(name => name.Gender == gender).ToList();
                 NamesCount = genderNames.Count;
                 var namePicks = await App.Database.GetNamePicksAsync();
-                pickPairs = namePicks.Where(namePick => genderNames.Any(name => name.Id == namePick.FirstNameId))
+                pickPairs = namePicks.Where(namePick => namePick.Gender == gender)
                     .ToList();
                 if (!pickPairs.Any())
                 {
@@ -163,7 +166,11 @@ namespace MenoPreDieta.ViewModels
                             var firstName = genderNames[i];
                             var secondName = genderNames[j];
                             var namePick = new NamePickEntity
-                                {FirstNameId = firstName.Id, SecondNameId = secondName.Id};
+                            {
+                                FirstNameId = firstName.Id,
+                                SecondNameId = secondName.Id,
+                                Gender = gender
+                            };
                             pickPairs.Add(namePick);
                         }
                     }
@@ -178,6 +185,8 @@ namespace MenoPreDieta.ViewModels
                 IsBusy = false;
             }
         }
+
+        protected abstract Gender GetGender();
 
         private async Task PickFirstNameAsync()
         {
@@ -223,7 +232,7 @@ namespace MenoPreDieta.ViewModels
                 var pairsToRemove = pickPairs.Where(pair => pair.FirstNameId == First.Id || pair.SecondNameId == First.Id);
                 await RemovePairs(pairsToRemove);
                 var namePicks = await App.Database.GetNamePicksAsync();
-                pickPairs = namePicks.Where(namePick => genderNames.Any(name => name.Id == namePick.FirstNameId)).ToList();
+                pickPairs = namePicks.Where(namePick => namePick.Gender == GetGender()).ToList();
                 Update();
             }
             finally
@@ -242,7 +251,7 @@ namespace MenoPreDieta.ViewModels
                 var pairsToRemove = pickPairs.Where(pair => pair.FirstNameId == Second.Id || pair.SecondNameId == Second.Id);
                 await RemovePairs(pairsToRemove);
                 var namePicks = await App.Database.GetNamePicksAsync();
-                pickPairs = namePicks.Where(namePick => genderNames.Any(name => name.Id == namePick.FirstNameId)).ToList();
+                pickPairs = namePicks.Where(namePick => namePick.Gender == GetGender()).ToList();
                 Update();
             }
             finally
@@ -280,6 +289,10 @@ namespace MenoPreDieta.ViewModels
             Accuracy = PairsCount > 0 ? 1 - (double) RemainingPairsCount / PairsCount : 0;
         }
 
-        protected abstract Gender GetGender();
+        protected async Task ResetAsync()
+        {
+            await App.Database.DeleteNamePicksAsync(pickPairs);
+            await LoadAsync();
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using MenoPreDieta.Entities;
 using SQLite;
@@ -33,5 +34,15 @@ namespace MenoPreDieta.Data
 
         public Task<int> DeleteNamePickAsync(NamePickEntity namePick) => 
             database.DeleteAsync(namePick);
+
+        public async Task DeleteNamePicksAsync(List<NamePickEntity> namePicks)
+        {
+            // TODO: rework to 2 tables (boy, girl) and drop whole table when resetting.
+            // var ids = namePicks.Select(np => np.Id);
+            //await database
+            //    .Table<NamePickEntity>()
+            //    .Where(entity => ids.Contains(entity.Id))
+            //    .DeleteAsync();
+        }
     }
 }
