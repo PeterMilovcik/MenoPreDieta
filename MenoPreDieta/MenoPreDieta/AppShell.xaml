@@ -12,17 +12,31 @@
             </ShellContent>
         </Tab>
     </FlyoutItem>
-    <FlyoutItem Title="Meno pre chlapca">
+    <FlyoutItem Title="Vyber meno pre chlapca">
         <Tab>
             <ShellContent>
                 <views:PickBoyNamePage />
             </ShellContent>
         </Tab>
     </FlyoutItem>
-    <FlyoutItem Title="Meno pre dievča">
+    <FlyoutItem Title="Vyber meno pre dievča">
         <Tab>
             <ShellContent>
                 <views:PickGirlNamePage />
+            </ShellContent>
+        </Tab>
+    </FlyoutItem>
+    <FlyoutItem Title="Rebríček chlapčenských mien">
+        <Tab>
+            <ShellContent>
+                <views:RankedBoyNamesPage />
+            </ShellContent>
+        </Tab>
+    </FlyoutItem>
+    <FlyoutItem Title="Rebríček dievčenských mien">
+        <Tab>
+            <ShellContent>
+                <views:RankedGirlNamesPage />
             </ShellContent>
         </Tab>
     </FlyoutItem>

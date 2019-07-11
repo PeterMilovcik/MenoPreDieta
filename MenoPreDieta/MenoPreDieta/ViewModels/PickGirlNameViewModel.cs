@@ -1,4 +1,5 @@
 ﻿using MenoPreDieta.Entities;
+using MenoPreDieta.Views;
 using Xamarin.Forms;
 
 namespace MenoPreDieta.ViewModels
@@ -8,7 +9,12 @@ namespace MenoPreDieta.ViewModels
         public PickGirlNameViewModel()
         {
             GenderColor = (Color)Application.Current.Resources["PinkLight"];
+            ShowRankedNamesCommand = new Command(
+                async () => await Shell.Current.GoToAsync(
+                    nameof(RankedGirlNamesPage)));
         }
+
+        public override Command ShowRankedNamesCommand { get; }
 
         protected override Gender GetGender() => Gender.Girl;
     }

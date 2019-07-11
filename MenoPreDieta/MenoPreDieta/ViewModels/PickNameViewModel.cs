@@ -141,6 +141,8 @@ namespace MenoPreDieta.ViewModels
 
         public Command RemoveSecondNameCommand { get; }
 
+        public abstract Command ShowRankedNamesCommand { get; }
+
         public virtual async Task LoadAsync()
         {
             try
