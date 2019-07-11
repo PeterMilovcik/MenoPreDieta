@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using MenoPreDieta.Entities;
 using MenoPreDieta.Models;
@@ -11,6 +13,17 @@ namespace MenoPreDieta.ViewModels
         private NameModel second;
         private int namesCount;
         private int pairsCount;
+        private int remainingPairsCount;
+        private double accuracy;
+        private List<NameEntity> genderNames;
+        private List<NamePickEntity> pickPairs;
+        private readonly Random random;
+        private NamePickEntity namePick;
+
+        protected PickNameViewModel()
+        {
+            random = new Random();
+        }
 
         public NameModel First
         {
@@ -56,13 +69,35 @@ namespace MenoPreDieta.ViewModels
             }
         }
 
+        public int RemainingPairsCount
+        {
+            get => remainingPairsCount;
+            set
+            {
+                if (value == remainingPairsCount) return;
+                remainingPairsCount = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public double Accuracy
+        {
+            get => accuracy;
+            set
+            {
+                if (value.Equals(accuracy)) return;
+                accuracy = value;
+                OnPropertyChanged();
+            }
+        }
+
         public virtual async Task LoadAsync()
         {
             var names = await App.Database.GetNamesAsync();
-            var genderNames = names.Where(name => name.Gender == GetGender()).ToList();
+            genderNames = names.Where(name => name.Gender == GetGender()).ToList();
             NamesCount = genderNames.Count;
             var namePicks = await App.Database.GetNamePicksAsync();
-            var pickPairs = namePicks.Where(namePick => genderNames.Any(name => name.Id == namePick.FirstNameId)).ToList();
+            pickPairs = namePicks.Where(namePick => genderNames.Any(name => name.Id == namePick.FirstNameId)).ToList();
             if (!pickPairs.Any())
             {
                 for (int i = 0; i < genderNames.Count; i++)
@@ -80,6 +115,27 @@ namespace MenoPreDieta.ViewModels
             }
 
             PairsCount = pickPairs.Count;
+            RemainingPairsCount = pickPairs.Count(pickPair => !pickPair.IsNamePicked);
+            Accuracy = PairsCount > 0 ? 1 - (double) RemainingPairsCount / PairsCount : 0;
+
+            ChooseNamesToPick();
+        }
+
+        private void ChooseNamesToPick()
+        {
+            var notPickedNamePairs = pickPairs.Where(pair => !pair.IsNamePicked).ToList();
+            if (notPickedNamePairs.Any())
+            {
+                namePick = notPickedNamePairs[random.Next(notPickedNamePairs.Count - 1)];
+                var firstName = genderNames.Single(name => name.Id == namePick.FirstNameId);
+                First = new NameModel(firstName.Id, firstName.Value);
+                var secondName = genderNames.Single(name => name.Id == namePick.SecondNameId);
+                Second = new NameModel(secondName.Id, secondName.Value);
+            }
+            else
+            {
+                namePick = null;
+            }
         }
 
         protected abstract Gender GetGender();

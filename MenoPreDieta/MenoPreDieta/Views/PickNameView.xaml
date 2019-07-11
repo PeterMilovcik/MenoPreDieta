@@ -82,13 +82,13 @@
                 <Label
                     FontAttributes="Bold"
                     FontSize="Small"
-                    Text="0" />
+                    Text="{Binding RemainingPairsCount}" />
 
                 <Label FontSize="Small" Text="PRESNOSŤ:" />
                 <Label
                     FontAttributes="Bold"
                     FontSize="Small"
-                    Text="0%" />
+                    Text="{Binding Accuracy, StringFormat='{0:P2}'}" />
 
             </StackLayout>
 
