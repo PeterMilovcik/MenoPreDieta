@@ -27,7 +27,7 @@
                 BackgroundColor="Transparent"
                 FontSize="Large"
                 HorizontalOptions="FillAndExpand"
-                Text="FirstName"
+                Text="{Binding First.Name}"
                 VerticalOptions="FillAndExpand" />
 
             <Button
@@ -37,7 +37,7 @@
                 BackgroundColor="Transparent"
                 FontSize="Large"
                 HorizontalOptions="FillAndExpand"
-                Text="SecondName"
+                Text="{Binding Second.Name}"
                 VerticalOptions="FillAndExpand" />
 
             <fab:FloatingActionButtonView
