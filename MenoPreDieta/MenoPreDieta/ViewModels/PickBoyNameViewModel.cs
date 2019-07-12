@@ -1,11 +1,13 @@
-﻿using MenoPreDieta.Dialogs;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using MenoPreDieta.Dialogs;
 using MenoPreDieta.Entities;
 using MenoPreDieta.Views;
 using Xamarin.Forms;
 
 namespace MenoPreDieta.ViewModels
 {
-    public class PickBoyNameViewModel : PickNameViewModel
+    public class PickBoyNameViewModel : PickNameViewModel<BoyNameEntity, BoyNamePickEntity>
     {
         public PickBoyNameViewModel(IConfirmationDialog confirmationDialog) : base(confirmationDialog)
         {
@@ -21,6 +23,25 @@ namespace MenoPreDieta.ViewModels
 
         public override Command ResetCommand { get; }
 
-        protected override Gender GetGender() => Gender.Boy;
+        protected override Task InsertToDatabase(List<BoyNamePickEntity> namePicks) => 
+            App.Database.InsertBoyNamePicksAsync(namePicks);
+
+        protected override BoyNamePickEntity CreateNamePickEntity(int firstId, int secondId) =>
+            new BoyNamePickEntity {FirstNameId = firstId, SecondNameId = secondId};
+
+        protected override Task<List<BoyNameEntity>> GetNamesAsync() => 
+            App.Database.GetBoyNamesAsync();
+
+        protected override Task<List<BoyNamePickEntity>> GetNamePicksAsync() => 
+            App.Database.GetBoyNamePicksAsync();
+
+        protected override Task UpdateNamePickAsync(BoyNamePickEntity namePickEntity) => 
+            App.Database.UpdateBoyNamePickAsync(namePickEntity);
+
+        protected override Task DeleteNamePicksAsync(BoyNamePickEntity namePickEntity) => 
+            App.Database.DeleteBoyNamePickAsync(namePickEntity);
+
+        protected override Task RecreateTableAsync() => 
+            App.Database.RecreateBoyNamesTableAsync();
     }
 }

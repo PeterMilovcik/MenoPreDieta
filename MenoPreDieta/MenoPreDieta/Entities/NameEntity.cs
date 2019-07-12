@@ -1,14 +1,8 @@
-﻿using SQLite;
-
-namespace MenoPreDieta.Entities
+﻿namespace MenoPreDieta.Entities
 {
-    public class NameEntity
+    public interface INameEntity
     {
-        [PrimaryKey, AutoIncrement]
-        public int Id { get; set; }
-
-        public string Value { get; set; }
-
-        public Gender Gender { get; set; }
+        int Id { get; set; }
+        string Value { get; set; }
     }
 }

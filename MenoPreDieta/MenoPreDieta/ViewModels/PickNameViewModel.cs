@@ -10,7 +10,9 @@ using Xamarin.Forms;
 
 namespace MenoPreDieta.ViewModels
 {
-    public abstract class PickNameViewModel : ViewModel
+    public abstract class PickNameViewModel<TNameEntity, TNamePickEntity> : ViewModel
+        where TNameEntity : INameEntity
+        where TNamePickEntity : INamePickEntity
     {
         private NameModel first;
         private NameModel second;
@@ -18,10 +20,10 @@ namespace MenoPreDieta.ViewModels
         private int pairsCount;
         private int remainingPairsCount;
         private double accuracy;
-        private List<NameEntity> genderNames;
-        private List<NamePickEntity> pickPairs;
+        private List<TNameEntity> names;
+        private List<TNamePickEntity> pickPairs;
         private readonly Random random;
-        private NamePickEntity namePick;
+        private TNamePickEntity namePick;
         private bool isBusy;
         private bool isEnabled;
         private Color genderColor;
@@ -154,32 +156,22 @@ namespace MenoPreDieta.ViewModels
             try
             {
                 IsBusy = true;
-                var names = await App.Database.GetNamesAsync();
-                var gender = GetGender();
-                genderNames = names.Where(name => name.Gender == gender).ToList();
-                NamesCount = genderNames.Count;
-                var namePicks = await App.Database.GetNamePicksAsync();
-                pickPairs = namePicks.Where(namePick => namePick.Gender == gender)
-                    .ToList();
+                names = await GetNamesAsync();
+                NamesCount = names.Count;
+                pickPairs = await GetNamePicksAsync();
                 if (!pickPairs.Any())
                 {
-                    for (int i = 0; i < genderNames.Count; i++)
+                    for (int i = 0; i < names.Count; i++)
                     {
-                        for (int j = i + 1; j < genderNames.Count; j++)
+                        for (int j = i + 1; j < names.Count; j++)
                         {
-                            var firstName = genderNames[i];
-                            var secondName = genderNames[j];
-                            var namePick = new NamePickEntity
-                            {
-                                FirstNameId = firstName.Id,
-                                SecondNameId = secondName.Id,
-                                Gender = gender
-                            };
-                            pickPairs.Add(namePick);
+                            var firstName = names[i];
+                            var secondName = names[j];
+                            pickPairs.Add(CreateNamePickEntity(firstName.Id, secondName.Id));
                         }
                     }
 
-                    await App.Database.InsertNamePicksAsync(pickPairs);
+                    await InsertToDatabase(pickPairs);
                 }
 
                 Update();
@@ -190,7 +182,13 @@ namespace MenoPreDieta.ViewModels
             }
         }
 
-        protected abstract Gender GetGender();
+        protected abstract Task InsertToDatabase(List<TNamePickEntity> namePicks);
+
+        protected abstract TNamePickEntity CreateNamePickEntity(int firstId, int secondId);
+
+        protected abstract Task<List<TNameEntity>> GetNamesAsync();
+
+        protected abstract Task<List<TNamePickEntity>> GetNamePicksAsync();
 
         private async Task PickFirstNameAsync()
         {
@@ -200,7 +198,7 @@ namespace MenoPreDieta.ViewModels
                 IsBusy = true;
                 namePick.PickedNameId = namePick.FirstNameId;
                 namePick.IsNamePicked = true;
-                await App.Database.UpdateNamePickAsync(namePick);
+                await UpdateNamePickAsync(namePick);
                 Update();
             }
             finally
@@ -208,6 +206,8 @@ namespace MenoPreDieta.ViewModels
                 IsBusy = false;
             }
         }
+
+        protected abstract Task UpdateNamePickAsync(TNamePickEntity namePickEntity);
 
         private async Task PickSecondNameAsync()
         {
@@ -217,7 +217,7 @@ namespace MenoPreDieta.ViewModels
                 IsBusy = true;
                 namePick.PickedNameId = namePick.SecondNameId;
                 namePick.IsNamePicked = true;
-                await App.Database.UpdateNamePickAsync(namePick);
+                await UpdateNamePickAsync(namePick);
                 Update();
             }
             finally
@@ -235,8 +235,7 @@ namespace MenoPreDieta.ViewModels
                 if (First == null) return;
                 var pairsToRemove = pickPairs.Where(pair => pair.FirstNameId == First.Id || pair.SecondNameId == First.Id);
                 await RemovePairs(pairsToRemove);
-                var namePicks = await App.Database.GetNamePicksAsync();
-                pickPairs = namePicks.Where(namePick => namePick.Gender == GetGender()).ToList();
+                pickPairs = await GetNamePicksAsync();
                 Update();
             }
             finally
@@ -254,8 +253,7 @@ namespace MenoPreDieta.ViewModels
                 if (Second == null) return;
                 var pairsToRemove = pickPairs.Where(pair => pair.FirstNameId == Second.Id || pair.SecondNameId == Second.Id);
                 await RemovePairs(pairsToRemove);
-                var namePicks = await App.Database.GetNamePicksAsync();
-                pickPairs = namePicks.Where(namePick => namePick.Gender == GetGender()).ToList();
+                pickPairs = await GetNamePicksAsync();
                 Update();
             }
             finally
@@ -264,13 +262,15 @@ namespace MenoPreDieta.ViewModels
             }
         }
 
-        private static async Task RemovePairs(IEnumerable<NamePickEntity> pairsToRemove)
+        private async Task RemovePairs(IEnumerable<TNamePickEntity> pairsToRemove)
         {
             foreach (var pairToRemove in pairsToRemove)
             {
-                await App.Database.DeleteNamePickAsync(pairToRemove);
+                await DeleteNamePicksAsync(pairToRemove);
             }
         }
+
+        protected abstract Task DeleteNamePicksAsync(TNamePickEntity namePickEntity);
 
         private void Update()
         {
@@ -278,14 +278,14 @@ namespace MenoPreDieta.ViewModels
             if (notPickedNamePairs.Any())
             {
                 namePick = notPickedNamePairs[random.Next(notPickedNamePairs.Count - 1)];
-                var firstName = genderNames.Single(name => name.Id == namePick.FirstNameId);
+                var firstName = names.Single(name => name.Id == namePick.FirstNameId);
                 First = new NameModel(firstName.Id, firstName.Value);
-                var secondName = genderNames.Single(name => name.Id == namePick.SecondNameId);
+                var secondName = names.Single(name => name.Id == namePick.SecondNameId);
                 Second = new NameModel(secondName.Id, secondName.Value);
             }
             else
             {
-                namePick = null;
+                namePick = default;
             }
 
             PairsCount = pickPairs.Count;
@@ -297,9 +297,11 @@ namespace MenoPreDieta.ViewModels
         {
             if (await confirmationDialog.ShowDialog())
             {
-                await App.Database.DeleteNamePicksAsync(pickPairs);
+                await RecreateTableAsync();
                 await LoadAsync();
             }
         }
+
+        protected abstract Task RecreateTableAsync();
     }
 }

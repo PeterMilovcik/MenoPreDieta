@@ -2,7 +2,7 @@
 
 namespace MenoPreDieta.Entities
 {
-    public class NamePickEntity
+    public class GirlNamePickEntity : INamePickEntity
     {
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
@@ -10,6 +10,5 @@ namespace MenoPreDieta.Entities
         public int SecondNameId { get; set; }
         public int PickedNameId { get; set; }
         public bool IsNamePicked { get; set; }
-        public Gender Gender { get; set; }
     }
 }

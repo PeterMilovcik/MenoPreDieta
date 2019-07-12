@@ -25,10 +25,30 @@ namespace MenoPreDieta
 
         protected override async void OnStart()
         {
-            var names = await Database.GetNamesAsync();
+            await InitializeNames();
+        }
+
+        private static async Task InitializeNames()
+        {
+            await InitializeBoyNames();
+            await InitializeGirlNames();
+        }
+
+        private static async Task InitializeBoyNames()
+        {
+            var names = await Database.GetBoyNamesAsync();
             if (!names.Any())
             {
-                await Database.InsertNamesAsync(new AllNames());
+                await Database.InsertBoyNamesAsync(new BoyNames());
+            }
+        }
+
+        private static async Task InitializeGirlNames()
+        {
+            var names = await Database.GetGirlNamesAsync();
+            if (!names.Any())
+            {
+                await Database.InsertGirlNamesAsync(new GirlNames());
             }
         }
 

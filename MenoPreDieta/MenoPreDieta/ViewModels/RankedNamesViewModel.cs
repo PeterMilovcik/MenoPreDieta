@@ -1,4 +1,6 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using MenoPreDieta.Entities;
@@ -6,7 +8,9 @@ using Xamarin.Forms;
 
 namespace MenoPreDieta.ViewModels
 {
-    public abstract class RankedNamesViewModel : ViewModel
+    public abstract class RankedNamesViewModel<TNameEntity, TNamePickEntity> : ViewModel
+        where TNameEntity : INameEntity
+        where TNamePickEntity : INamePickEntity
     {
         private ObservableCollection<Model> items;
         private bool isBusy;
@@ -45,23 +49,19 @@ namespace MenoPreDieta.ViewModels
             }
         }
 
-        protected abstract Gender GetGender();
-
         public async Task LoadAsync()
         {
             try
             {
                 IsBusy = true;
-                var names = await App.Database.GetNamesAsync();
-                var genderNames = names.Where(name => name.Gender == GetGender()).ToList();
-                var namePicks = await App.Database.GetNamePicksAsync();
-                var genderNamePicks = namePicks.Where(np => np.Gender == GetGender() && np.IsNamePicked);
-                var groupedNamePicks = genderNamePicks.GroupBy(gnp => gnp.PickedNameId);
+                var names = await GetNamesAsync();
+                var namePicks = (await GetNamePicksAsync()).Where(np => np.IsNamePicked);
+                var groupedNamePicks = namePicks.GroupBy(gnp => gnp.PickedNameId);
                 var orderedGroupedNamePicks = groupedNamePicks.OrderByDescending(gnp => gnp.Count());
                 Items = new ObservableCollection<Model>();
                 foreach (var pick in orderedGroupedNamePicks)
                 {
-                    var name = genderNames.Single(n => n.Id == pick.Key);
+                    var name = names.Single(n => n.Id == pick.Key);
                     Items.Add(new Model(name.Id, name.Value, pick.Count()));
                 }
             }
@@ -70,6 +70,10 @@ namespace MenoPreDieta.ViewModels
                 IsBusy = false;
             }
         }
+
+        protected abstract Task<List<TNameEntity>> GetNamesAsync();
+
+        protected abstract Task<List<TNamePickEntity>> GetNamePicksAsync();
 
         public class Model
         {
