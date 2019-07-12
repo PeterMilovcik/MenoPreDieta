@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MenoPreDieta.Annotations;
+using MenoPreDieta.Dialogs;
 using MenoPreDieta.Entities;
 using MenoPreDieta.Models;
 using Xamarin.Forms;
@@ -23,9 +25,11 @@ namespace MenoPreDieta.ViewModels
         private bool isBusy;
         private bool isEnabled;
         private Color genderColor;
+        private readonly IConfirmationDialog confirmationDialog;
 
-        protected PickNameViewModel()
+        protected PickNameViewModel([NotNull] IConfirmationDialog confirmationDialog)
         {
+            this.confirmationDialog = confirmationDialog ?? throw new ArgumentNullException(nameof(confirmationDialog));
             random = new Random();
             PickFirstNameCommand = new Command(async () => await PickFirstNameAsync());
             PickSecondNameCommand = new Command(async () => await PickSecondNameAsync());
@@ -291,8 +295,11 @@ namespace MenoPreDieta.ViewModels
 
         protected async Task ResetAsync()
         {
-            await App.Database.DeleteNamePicksAsync(pickPairs);
-            await LoadAsync();
+            if (await confirmationDialog.ShowDialog())
+            {
+                await App.Database.DeleteNamePicksAsync(pickPairs);
+                await LoadAsync();
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using MenoPreDieta.Entities;
+﻿using MenoPreDieta.Dialogs;
+using MenoPreDieta.Entities;
 using MenoPreDieta.Views;
 using Xamarin.Forms;
 
@@ -6,7 +7,7 @@ namespace MenoPreDieta.ViewModels
 {
     public class PickBoyNameViewModel : PickNameViewModel
     {
-        public PickBoyNameViewModel()
+        public PickBoyNameViewModel(IConfirmationDialog confirmationDialog) : base(confirmationDialog)
         {
             GenderColor = (Color)Application.Current.Resources["BlueLight"];
             ShowRankedNamesCommand = new Command(
