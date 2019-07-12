@@ -17,7 +17,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="80" />
                 <RowDefinition Height="*" />
-                <RowDefinition Height="40" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <Button
@@ -26,9 +26,11 @@
                 Margin="20,0,10,0"
                 BackgroundColor="{Binding GenderColor}"
                 Command="{Binding PickFirstNameCommand}"
-                CornerRadius="30"
-                FontSize="Large"
+                ContentLayout="Bottom, 20"
+                CornerRadius="24"
+                FontSize="20"
                 HorizontalOptions="FillAndExpand"
+                ImageSource="ic_thumb_up.png"
                 Text="{Binding First.Name}"
                 VerticalOptions="FillAndExpand" />
 
@@ -38,9 +40,11 @@
                 Margin="10,0,20,0"
                 BackgroundColor="{Binding GenderColor}"
                 Command="{Binding PickSecondNameCommand}"
-                CornerRadius="30"
-                FontSize="Large"
+                ContentLayout="Bottom, 20"
+                CornerRadius="24"
+                FontSize="20"
                 HorizontalOptions="FillAndExpand"
+                ImageSource="ic_thumb_up.png"
                 Text="{Binding Second.Name}"
                 VerticalOptions="FillAndExpand" />
 
@@ -52,7 +56,7 @@
                 ColorRipple="{DynamicResource RedDark}"
                 Command="{Binding RemoveFirstNameCommand}"
                 HorizontalOptions="Start"
-                ImageName="ic_clear_white.png" />
+                ImageName="ic_trashcan.png" />
 
             <fab:FloatingActionButtonView
                 Grid.Row="0"
@@ -62,41 +66,59 @@
                 ColorRipple="{DynamicResource RedDark}"
                 Command="{Binding RemoveSecondNameCommand}"
                 HorizontalOptions="End"
-                ImageName="ic_clear_white.png" />
+                ImageName="ic_trashcan.png" />
 
-            <StackLayout
+            <Grid
                 Grid.Row="2"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
                 HorizontalOptions="Center"
-                Orientation="Horizontal"
                 VerticalOptions="End">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
-                <Label FontSize="Small" Text="MENÁ:" />
                 <Label
+                    Grid.Row="0"
+                    Grid.Column="0"
                     FontAttributes="Bold"
-                    FontSize="Small"
-                    Text="{Binding NamesCount}" />
+                    FontSize="Large"
+                    HorizontalOptions="Center"
+                    Text="{Binding RemainingPairsCount}"
+                    VerticalOptions="End" />
 
-                <Label FontSize="Small" Text="DVOJICE:" />
                 <Label
-                    FontAttributes="Bold"
+                    Grid.Row="1"
+                    Grid.Column="0"
                     FontSize="Small"
-                    Text="{Binding PairsCount}" />
+                    HorizontalOptions="Center"
+                    Text="ZOSTÁVA"
+                    VerticalOptions="Start" />
 
-                <Label FontSize="Small" Text="OSTÁVA:" />
                 <Label
+                    Grid.Row="0"
+                    Grid.Column="2"
                     FontAttributes="Bold"
-                    FontSize="Small"
-                    Text="{Binding RemainingPairsCount}" />
+                    FontSize="Large"
+                    HorizontalOptions="Center"
+                    Text="{Binding Accuracy, StringFormat='{0:P2}'}"
+                    VerticalOptions="End" />
 
-                <Label FontSize="Small" Text="PRESNOSŤ:" />
                 <Label
-                    FontAttributes="Bold"
+                    Grid.Row="1"
+                    Grid.Column="2"
                     FontSize="Small"
-                    Text="{Binding Accuracy, StringFormat='{0:P2}'}" />
+                    HorizontalOptions="Center"
+                    Text="PRESNOSŤ"
+                    VerticalOptions="Start" />
 
-            </StackLayout>
+            </Grid>
 
             <ActivityIndicator
                 Grid.Row="0"

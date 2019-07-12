@@ -40,11 +40,4 @@
             </ShellContent>
         </Tab>
     </FlyoutItem>
-    <FlyoutItem Title="Nastavenia">
-        <Tab>
-            <ShellContent>
-                <views:MainPage />
-            </ShellContent>
-        </Tab>
-    </FlyoutItem>
 </Shell>
