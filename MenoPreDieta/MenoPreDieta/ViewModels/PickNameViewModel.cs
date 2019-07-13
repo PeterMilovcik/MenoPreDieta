@@ -202,7 +202,7 @@ namespace MenoPreDieta.ViewModels
         private async Task PickFirstNameAsync() => 
             await PickNameAsync(namePick.FirstNameId);
 
-        private async Task PickSecondNameAsync() =>
+        private async Task PickSecondNameAsync() => 
             await PickNameAsync(namePick.SecondNameId);
 
         private async Task PickNameAsync(int nameId)
@@ -220,13 +220,17 @@ namespace MenoPreDieta.ViewModels
         private async Task RemoveFirstNameAsync()
         {
             if (First == null) return;
-            await RemoveNameAsync(First.Id);
+            var nameId = First.Id;
+            First = null;
+            await RemoveNameAsync(nameId);
         }
 
         private async Task RemoveSecondNameAsync()
         {
-            if (Second != null)
-                await RemoveNameAsync(Second.Id);
+            if (Second == null) return;
+            var nameId = Second.Id;
+            Second = null;
+            await RemoveNameAsync(nameId);
         }
 
         private async Task RemoveNameAsync(int nameId)
@@ -284,7 +288,20 @@ namespace MenoPreDieta.ViewModels
             updateQueue.ForEach(item => notPickedNamePairs.Remove(item));
             if (notPickedNamePairs.Any())
             {
-                namePick = GetRandomNamePick(notPickedNamePairs);
+                var pairsToPick = new List<TNamePickEntity>();
+                if (First == null && Second != null)
+                {
+                    pairsToPick = notPickedNamePairs.Where(pair => pair.SecondNameId == Second.Id).ToList();
+                }
+                if (First != null && Second == null)
+                {
+                    pairsToPick = notPickedNamePairs.Where(pair => pair.FirstNameId == First.Id).ToList();
+                }
+
+                namePick = GetRandomNamePick(
+                    pairsToPick.Any()
+                        ? pairsToPick
+                        : notPickedNamePairs);
                 UpdateFirstAndSecondName();
             }
             else
