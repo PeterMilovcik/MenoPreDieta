@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using MenoPreDieta.Annotations;
+using MenoPreDieta.Dialogs;
 using MenoPreDieta.Entities;
 using Xamarin.Forms;
 
@@ -15,6 +17,12 @@ namespace MenoPreDieta.ViewModels
         private ObservableCollection<Model> items;
         private bool isBusy;
         private Color genderColor;
+        protected IConfirmationDialog ConfirmationDialog { get; }
+
+        protected RankedNamesViewModel([NotNull] IConfirmationDialog confirmationDialog)
+        {
+            ConfirmationDialog = confirmationDialog ?? throw new ArgumentNullException(nameof(confirmationDialog));
+        }
 
         public ObservableCollection<Model> Items
         {
@@ -74,6 +82,21 @@ namespace MenoPreDieta.ViewModels
         protected abstract Task<List<TNameEntity>> GetNamesAsync();
 
         protected abstract Task<List<TNamePickEntity>> GetNamePicksAsync();
+
+        public abstract Command ResetCommand { get; }
+
+        protected async Task ResetAsync()
+        {
+            if (await ConfirmationDialog.ShowDialog())
+            {
+                await RecreateTableAsync();
+                await PickNamesAsync();
+            }
+        }
+
+        protected abstract Task PickNamesAsync();
+
+        protected abstract Task RecreateTableAsync();
 
         public class Model
         {

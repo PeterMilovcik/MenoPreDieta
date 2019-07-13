@@ -6,7 +6,16 @@
     xmlns:views="clr-namespace:MenoPreDieta.Views;assembly=MenoPreDieta"
     Title="Rebríček dievčenských mien"
     Shell.BackgroundColor="{DynamicResource Pink}">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem
+            Command="{Binding ResetCommand}"
+            IconImageSource="ic_reset.png"
+            Text="Začať odznova" />
+    </ContentPage.ToolbarItems>
+
     <ContentPage.Content>
         <views:RankedNamesView />
     </ContentPage.Content>
+
 </ContentPage>

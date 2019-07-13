@@ -196,9 +196,13 @@ namespace MenoPreDieta.ViewModels
             try
             {
                 IsBusy = true;
-                namePick.PickedNameId = namePick.FirstNameId;
-                namePick.IsNamePicked = true;
-                await UpdateNamePickAsync(namePick);
+                if (namePick != null)
+                {
+                    namePick.PickedNameId = namePick.FirstNameId;
+                    namePick.IsNamePicked = true;
+                    await UpdateNamePickAsync(namePick);
+                }
+
                 Update();
             }
             finally
@@ -215,9 +219,13 @@ namespace MenoPreDieta.ViewModels
             try
             {
                 IsBusy = true;
-                namePick.PickedNameId = namePick.SecondNameId;
-                namePick.IsNamePicked = true;
-                await UpdateNamePickAsync(namePick);
+                if (namePick != null)
+                {
+                    namePick.PickedNameId = namePick.SecondNameId;
+                    namePick.IsNamePicked = true;
+                    await UpdateNamePickAsync(namePick);
+                }
+
                 Update();
             }
             finally
@@ -232,11 +240,31 @@ namespace MenoPreDieta.ViewModels
             try
             {
                 IsBusy = true;
-                if (First == null) return;
-                var pairsToRemove = pickPairs.Where(pair => pair.FirstNameId == First.Id || pair.SecondNameId == First.Id);
+                if (First == null || Second == null) return;
+                var pairsToRemove =
+                    pickPairs.Where(pair => pair.FirstNameId == First.Id || pair.SecondNameId == First.Id);
                 await RemovePairs(pairsToRemove);
                 pickPairs = await GetNamePicksAsync();
-                Update();
+
+                var notPickedNamePairs = pickPairs
+                    .Where(pair => !pair.IsNamePicked && 
+                                   pair.SecondNameId == Second.Id).ToList();
+                if (notPickedNamePairs.Any())
+                {
+                    namePick = notPickedNamePairs[random.Next(notPickedNamePairs.Count - 1)];
+                    var firstName = names.Single(name => name.Id == namePick.FirstNameId);
+                    First = new NameModel(firstName.Id, firstName.Value);
+                    var secondName = names.Single(name => name.Id == namePick.SecondNameId);
+                    Second = new NameModel(secondName.Id, secondName.Value);
+
+                    PairsCount = pickPairs.Count;
+                    RemainingPairsCount = pickPairs.Count(pickPair => !pickPair.IsNamePicked);
+                    Accuracy = PairsCount > 0 ? 1 - (double) RemainingPairsCount / PairsCount : 0;
+                }
+                else
+                {
+                    Update();
+                }
             }
             finally
             {
@@ -250,11 +278,31 @@ namespace MenoPreDieta.ViewModels
             try
             {
                 IsBusy = true;
-                if (Second == null) return;
+                if (Second == null || First == null) return;
                 var pairsToRemove = pickPairs.Where(pair => pair.FirstNameId == Second.Id || pair.SecondNameId == Second.Id);
                 await RemovePairs(pairsToRemove);
                 pickPairs = await GetNamePicksAsync();
-                Update();
+
+                var notPickedNamePairs = pickPairs
+                    .Where(pair => !pair.IsNamePicked &&
+                                   pair.FirstNameId == First.Id).ToList();
+                if (notPickedNamePairs.Any())
+                {
+                    namePick = notPickedNamePairs[random.Next(notPickedNamePairs.Count - 1)];
+                    var firstName = names.Single(name => name.Id == namePick.FirstNameId);
+                    First = new NameModel(firstName.Id, firstName.Value);
+                    var secondName = names.Single(name => name.Id == namePick.SecondNameId);
+                    Second = new NameModel(secondName.Id, secondName.Value);
+
+                    PairsCount = pickPairs.Count;
+                    RemainingPairsCount = pickPairs.Count(pickPair => !pickPair.IsNamePicked);
+                    Accuracy = PairsCount > 0 ? 1 - (double)RemainingPairsCount / PairsCount : 0;
+                }
+                else
+                {
+                    Update();
+                }
+
             }
             finally
             {
@@ -285,7 +333,7 @@ namespace MenoPreDieta.ViewModels
             }
             else
             {
-                namePick = default;
+                ShowRankedNamesCommand.Execute(null);
             }
 
             PairsCount = pickPairs.Count;

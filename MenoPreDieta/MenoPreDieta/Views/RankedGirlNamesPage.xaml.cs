@@ -1,4 +1,5 @@
-﻿using MenoPreDieta.ViewModels;
+﻿using MenoPreDieta.Dialogs;
+using MenoPreDieta.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -12,7 +13,7 @@ namespace MenoPreDieta.Views
         public RankedGirlNamesPage()
         {
             InitializeComponent();
-            viewModel = new RankedGirlNamesViewModel();
+            viewModel = new RankedGirlNamesViewModel(new ConfirmationDialog(this));
             BindingContext = viewModel;
         }
 
