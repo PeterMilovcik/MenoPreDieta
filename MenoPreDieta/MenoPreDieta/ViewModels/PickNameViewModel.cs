@@ -28,6 +28,8 @@ namespace MenoPreDieta.ViewModels
         private bool isEnabled;
         private Color genderColor;
         private readonly IConfirmationDialog confirmationDialog;
+        private List<TNamePickEntity> updateQueue;
+        private List<TNamePickEntity> deleteQueue;
 
         protected PickNameViewModel([NotNull] IConfirmationDialog confirmationDialog)
         {
@@ -161,25 +163,32 @@ namespace MenoPreDieta.ViewModels
                 pickPairs = await GetNamePicksAsync();
                 if (!pickPairs.Any())
                 {
-                    for (int i = 0; i < names.Count; i++)
-                    {
-                        for (int j = i + 1; j < names.Count; j++)
-                        {
-                            var firstName = names[i];
-                            var secondName = names[j];
-                            pickPairs.Add(CreateNamePickEntity(firstName.Id, secondName.Id));
-                        }
-                    }
-
-                    await InsertToDatabase(pickPairs);
+                    await CreateNamePicks();
                 }
 
+                updateQueue = new List<TNamePickEntity>();
+                deleteQueue = new List<TNamePickEntity>();
                 Update();
             }
             finally
             {
                 IsBusy = false;
             }
+        }
+
+        private async Task CreateNamePicks()
+        {
+            for (int i = 0; i < names.Count; i++)
+            {
+                for (int j = i + 1; j < names.Count; j++)
+                {
+                    var firstName = names[i];
+                    var secondName = names[j];
+                    pickPairs.Add(CreateNamePickEntity(firstName.Id, secondName.Id));
+                }
+            }
+
+            await InsertToDatabase(pickPairs);
         }
 
         protected abstract Task InsertToDatabase(List<TNamePickEntity> namePicks);
@@ -190,125 +199,73 @@ namespace MenoPreDieta.ViewModels
 
         protected abstract Task<List<TNamePickEntity>> GetNamePicksAsync();
 
-        private async Task PickFirstNameAsync()
+        private async Task PickFirstNameAsync() => 
+            await PickNameAsync(namePick.FirstNameId);
+
+        private async Task PickSecondNameAsync() =>
+            await PickNameAsync(namePick.SecondNameId);
+
+        private async Task PickNameAsync(int nameId)
         {
-            if (IsBusy) return;
-            try
+            if (namePick != null)
             {
-                IsBusy = true;
-                if (namePick != null)
-                {
-                    namePick.PickedNameId = namePick.FirstNameId;
-                    namePick.IsNamePicked = true;
-                    await UpdateNamePickAsync(namePick);
-                }
-
+                namePick.PickedNameId = nameId;
+                namePick.IsNamePicked = true;
+                updateQueue.Add(namePick);
                 Update();
-            }
-            finally
-            {
-                IsBusy = false;
-            }
-        }
-
-        protected abstract Task UpdateNamePickAsync(TNamePickEntity namePickEntity);
-
-        private async Task PickSecondNameAsync()
-        {
-            if (IsBusy) return;
-            try
-            {
-                IsBusy = true;
-                if (namePick != null)
-                {
-                    namePick.PickedNameId = namePick.SecondNameId;
-                    namePick.IsNamePicked = true;
-                    await UpdateNamePickAsync(namePick);
-                }
-
-                Update();
-            }
-            finally
-            {
-                IsBusy = false;
+                await ProcessUpdateQueueAsync();
             }
         }
 
         private async Task RemoveFirstNameAsync()
         {
-            if (IsBusy) return;
-            try
-            {
-                IsBusy = true;
-                if (First == null || Second == null) return;
-                var pairsToRemove =
-                    pickPairs.Where(pair => pair.FirstNameId == First.Id || pair.SecondNameId == First.Id);
-                await RemovePairs(pairsToRemove);
-                pickPairs = await GetNamePicksAsync();
-
-                var notPickedNamePairs = pickPairs
-                    .Where(pair => !pair.IsNamePicked && 
-                                   pair.SecondNameId == Second.Id).ToList();
-                if (notPickedNamePairs.Any())
-                {
-                    namePick = notPickedNamePairs[random.Next(notPickedNamePairs.Count - 1)];
-                    var firstName = names.Single(name => name.Id == namePick.FirstNameId);
-                    First = new NameModel(firstName.Id, firstName.Value);
-                    var secondName = names.Single(name => name.Id == namePick.SecondNameId);
-                    Second = new NameModel(secondName.Id, secondName.Value);
-
-                    PairsCount = pickPairs.Count;
-                    RemainingPairsCount = pickPairs.Count(pickPair => !pickPair.IsNamePicked);
-                    Accuracy = PairsCount > 0 ? 1 - (double) RemainingPairsCount / PairsCount : 0;
-                }
-                else
-                {
-                    Update();
-                }
-            }
-            finally
-            {
-                IsBusy = false;
-            }
+            if (First == null) return;
+            await RemoveNameAsync(First.Id);
         }
 
         private async Task RemoveSecondNameAsync()
         {
-            if (IsBusy) return;
-            try
+            if (Second != null)
+                await RemoveNameAsync(Second.Id);
+        }
+
+        private async Task RemoveNameAsync(int nameId)
+        {
+            var pairsToRemove =
+                pickPairs.Where(pair => pair.FirstNameId == nameId ||
+                                        pair.SecondNameId == nameId).ToList();
+            pairsToRemove.ForEach(item =>
             {
-                IsBusy = true;
-                if (Second == null || First == null) return;
-                var pairsToRemove = pickPairs.Where(pair => pair.FirstNameId == Second.Id || pair.SecondNameId == Second.Id);
-                await RemovePairs(pairsToRemove);
-                pickPairs = await GetNamePicksAsync();
+                pickPairs.Remove(item);
+                deleteQueue.Add(item);
+            });
+            Update();
+            await ProcessDeleteQueueAsync();
+        }
 
-                var notPickedNamePairs = pickPairs
-                    .Where(pair => !pair.IsNamePicked &&
-                                   pair.FirstNameId == First.Id).ToList();
-                if (notPickedNamePairs.Any())
-                {
-                    namePick = notPickedNamePairs[random.Next(notPickedNamePairs.Count - 1)];
-                    var firstName = names.Single(name => name.Id == namePick.FirstNameId);
-                    First = new NameModel(firstName.Id, firstName.Value);
-                    var secondName = names.Single(name => name.Id == namePick.SecondNameId);
-                    Second = new NameModel(secondName.Id, secondName.Value);
-
-                    PairsCount = pickPairs.Count;
-                    RemainingPairsCount = pickPairs.Count(pickPair => !pickPair.IsNamePicked);
-                    Accuracy = PairsCount > 0 ? 1 - (double)RemainingPairsCount / PairsCount : 0;
-                }
-                else
-                {
-                    Update();
-                }
-
-            }
-            finally
+        private async Task ProcessUpdateQueueAsync()
+        {
+            if (updateQueue.Any())
             {
-                IsBusy = false;
+                var item = updateQueue.First();
+                await UpdateNamePickAsync(item);
+                updateQueue.Remove(item);
+                await ProcessUpdateQueueAsync();
             }
         }
+
+        private async Task ProcessDeleteQueueAsync()
+        {
+            if (deleteQueue.Any())
+            {
+                var item = deleteQueue.First();
+                await DeleteNamePicksAsync(item);
+                deleteQueue.Remove(item);
+                await ProcessDeleteQueueAsync();
+            }
+        }
+
+        protected abstract Task UpdateNamePickAsync(TNamePickEntity namePickEntity);
 
         private async Task RemovePairs(IEnumerable<TNamePickEntity> pairsToRemove)
         {
@@ -323,23 +280,38 @@ namespace MenoPreDieta.ViewModels
         private void Update()
         {
             var notPickedNamePairs = pickPairs.Where(pair => !pair.IsNamePicked).ToList();
+            deleteQueue.ForEach(item => notPickedNamePairs.Remove(item));
+            updateQueue.ForEach(item => notPickedNamePairs.Remove(item));
             if (notPickedNamePairs.Any())
             {
-                namePick = notPickedNamePairs[random.Next(notPickedNamePairs.Count - 1)];
-                var firstName = names.Single(name => name.Id == namePick.FirstNameId);
-                First = new NameModel(firstName.Id, firstName.Value);
-                var secondName = names.Single(name => name.Id == namePick.SecondNameId);
-                Second = new NameModel(secondName.Id, secondName.Value);
+                namePick = GetRandomNamePick(notPickedNamePairs);
+                UpdateFirstAndSecondName();
             }
             else
             {
                 ShowRankedNamesCommand.Execute(null);
             }
 
+            UpdateStats();
+        }
+
+        private void UpdateFirstAndSecondName()
+        {
+            var firstName = names.Single(name => name.Id == namePick.FirstNameId);
+            First = new NameModel(firstName.Id, firstName.Value);
+            var secondName = names.Single(name => name.Id == namePick.SecondNameId);
+            Second = new NameModel(secondName.Id, secondName.Value);
+        }
+
+        private void UpdateStats()
+        {
             PairsCount = pickPairs.Count;
             RemainingPairsCount = pickPairs.Count(pickPair => !pickPair.IsNamePicked);
             Accuracy = PairsCount > 0 ? 1 - (double) RemainingPairsCount / PairsCount : 0;
         }
+
+        private TNamePickEntity GetRandomNamePick(IReadOnlyList<TNamePickEntity> list) => 
+            list[random.Next(list.Count - 1)];
 
         protected async Task ResetAsync()
         {
