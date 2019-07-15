@@ -91,6 +91,8 @@ namespace MenoPreDieta.ViewModels
             {
                 await RecreateTableAsync();
                 await PickNamesAsync();
+                await LoadAsync();
+                await Shell.Current.Navigation.PopAsync();
             }
         }
 
