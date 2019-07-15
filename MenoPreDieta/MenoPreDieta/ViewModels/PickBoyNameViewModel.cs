@@ -17,11 +17,15 @@ namespace MenoPreDieta.ViewModels
                     nameof(RankedBoyNamesPage)));
             ResetCommand = new Command(
                 async () => await ResetAsync());
+            RestoreCommand = new Command(
+                async ()=> await Shell.Current.GoToAsync(nameof(RestoreBoyNamePage)));
         }
 
         public override Command ShowRankedNamesCommand { get; }
 
         public override Command ResetCommand { get; }
+
+        public override Command RestoreCommand { get; }
 
         protected override Task InsertToDatabase(List<BoyNamePickEntity> namePicks) => 
             App.Database.InsertBoyNamePicksAsync(namePicks);

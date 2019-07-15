@@ -153,6 +153,8 @@ namespace MenoPreDieta.ViewModels
 
         public abstract Command ResetCommand { get; }
 
+        public abstract Command RestoreCommand { get; }
+
         public virtual async Task LoadAsync()
         {
             try

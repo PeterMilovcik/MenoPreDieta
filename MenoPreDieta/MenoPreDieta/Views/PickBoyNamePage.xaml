@@ -8,6 +8,10 @@
     Shell.BackgroundColor="{DynamicResource Blue}">
     <ContentPage.ToolbarItems>
         <ToolbarItem
+            Command="{Binding RestoreCommand}"
+            IconImageSource="ic_restore.png"
+            Text="Vratiť meno z koša" />
+        <ToolbarItem
             Command="{Binding ResetCommand}"
             IconImageSource="ic_reset.png"
             Text="Začať odznova" />
