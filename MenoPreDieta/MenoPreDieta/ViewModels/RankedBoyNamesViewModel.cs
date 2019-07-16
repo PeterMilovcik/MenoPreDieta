@@ -14,7 +14,11 @@ namespace MenoPreDieta.ViewModels
         {
             GenderColor = (Color) Application.Current.Resources["BlueLight"];
             ResetCommand = new Command(
-                async () => await ResetAsync());
+                async () =>
+                {
+                    await ResetAsync();
+                    MessagingCenter.Send(this, "ResetBoyNamePicks");
+                });
         }
 
         public override Command ResetCommand { get; }

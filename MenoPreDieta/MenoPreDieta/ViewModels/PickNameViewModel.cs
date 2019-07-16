@@ -6,6 +6,7 @@ using MenoPreDieta.Annotations;
 using MenoPreDieta.Dialogs;
 using MenoPreDieta.Entities;
 using MenoPreDieta.Models;
+using MenoPreDieta.Views;
 using Xamarin.Forms;
 
 namespace MenoPreDieta.ViewModels
@@ -39,6 +40,15 @@ namespace MenoPreDieta.ViewModels
             PickSecondNameCommand = new Command(async () => await PickSecondNameAsync());
             RemoveFirstNameCommand = new Command(async () => await RemoveFirstNameAsync());
             RemoveSecondNameCommand = new Command(async () => await RemoveSecondNameAsync());
+            MessagingCenter.Subscribe<RankedBoyNamesViewModel>(
+                this, "ResetBoyNamePicks", async sender => await LoadAsync());
+            MessagingCenter.Subscribe<RankedGirlNamesViewModel>(
+                this, "ResetGirlNamePicks", async sender => await LoadAsync());
+        }
+
+        private void OnResetBoyNamePicks<TSender, TArgs>(TSender arg1, TArgs arg2) where TSender : class
+        {
+            throw new NotImplementedException();
         }
 
         public NameModel First

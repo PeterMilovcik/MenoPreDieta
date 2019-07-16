@@ -13,8 +13,11 @@ namespace MenoPreDieta.ViewModels
             : base(confirmationDialog)
         {
             GenderColor = (Color) Application.Current.Resources["PinkLight"];
-            ResetCommand = new Command(
-                async () => await ResetAsync());
+            ResetCommand = new Command(async () =>
+            {
+                await ResetAsync();
+                MessagingCenter.Send(this, "ResetGirlNamePicks");
+            });
         }
 
         public override Command ResetCommand { get; }
