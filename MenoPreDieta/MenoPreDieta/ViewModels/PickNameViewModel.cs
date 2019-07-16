@@ -46,11 +46,6 @@ namespace MenoPreDieta.ViewModels
                 this, "ResetGirlNamePicks", async sender => await LoadAsync());
         }
 
-        private void OnResetBoyNamePicks<TSender, TArgs>(TSender arg1, TArgs arg2) where TSender : class
-        {
-            throw new NotImplementedException();
-        }
-
         public NameModel First
         {
             get => first;
