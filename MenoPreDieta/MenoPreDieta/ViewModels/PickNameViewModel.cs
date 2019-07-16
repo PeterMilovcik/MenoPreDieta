@@ -44,6 +44,10 @@ namespace MenoPreDieta.ViewModels
                 this, "ResetBoyNamePicks", async sender => await LoadAsync());
             MessagingCenter.Subscribe<RankedGirlNamesViewModel>(
                 this, "ResetGirlNamePicks", async sender => await LoadAsync());
+            MessagingCenter.Subscribe<RestoreBoyNameViewModel>(
+                this, "RestoreBoyName", async sender => await LoadAsync());
+            MessagingCenter.Subscribe<RestoreGirlNameViewModel>(
+                this, "RestoreGirlName", async sender => await LoadAsync());
         }
 
         public NameModel First
@@ -252,6 +256,7 @@ namespace MenoPreDieta.ViewModels
             });
             Update();
             await ProcessDeleteQueueAsync();
+            MessagingCenter.Send(this, "NameDeleted");
         }
 
         private async Task ProcessUpdateQueueAsync()

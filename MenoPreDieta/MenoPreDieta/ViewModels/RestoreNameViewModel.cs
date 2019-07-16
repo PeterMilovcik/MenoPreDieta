@@ -21,6 +21,10 @@ namespace MenoPreDieta.ViewModels
         {
             RefreshCommand = new Command(async ()=> await LoadAsync());
             Random = new Random();
+            MessagingCenter.Subscribe<PickNameViewModel<BoyNameEntity, BoyNamePickEntity>>(
+                this, "NameDeleted", async sender => await LoadAsync());
+            MessagingCenter.Subscribe<PickNameViewModel<GirlNameEntity, GirlNamePickEntity>>(
+                this, "NameDeleted", async sender => await LoadAsync());
         }
 
         protected Random Random { get; }

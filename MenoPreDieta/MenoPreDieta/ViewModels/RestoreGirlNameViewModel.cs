@@ -51,6 +51,8 @@ namespace MenoPreDieta.ViewModels
             await InsertToDatabase(newPairs);
 
             await Shell.Current.Navigation.PopAsync();
+
+            MessagingCenter.Send(this, "RestoreGirlName");
         }
 
         private GirlNamePickEntity CreateNamePickEntity(int firstId, int secondId) =>
