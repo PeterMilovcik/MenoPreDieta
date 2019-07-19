@@ -23,7 +23,10 @@ namespace MenoPreDieta.Core
         protected override Task<int> AddToDatabase(List<INamePickEntity> pairs) => 
             App.Database.InsertBoyNamePicksAsync(pairs.OfType<BoyNamePickEntity>());
 
-        public override Task<int> UpdateAsync(INamePickEntity pair) => 
+        public override Task<int> UpdateDatabaseAsync(INamePickEntity pair) => 
             App.Database.UpdateBoyNamePickAsync(pair as BoyNamePickEntity);
+
+        public override Task<int> DeleteFromDatabaseAsync(INamePickEntity namePickEntity) => 
+            App.Database.DeleteBoyNamePickAsync(namePickEntity as BoyNamePickEntity);
     }
 }

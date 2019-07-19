@@ -24,10 +24,7 @@ namespace MenoPreDieta.ViewModels
         public override Command ResetCommand { get; }
 
         public override Command RestoreCommand { get; }
-
-        protected override Task DeleteNamePicksAsync(INamePickEntity namePickEntity) =>
-            App.Database.DeleteGirlNamePickAsync(namePickEntity as GirlNamePickEntity);
-
+        
         protected override Task RecreateTableAsync() =>
             App.Database.RecreateGirlNamesTableAsync();
     }

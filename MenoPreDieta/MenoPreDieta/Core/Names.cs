@@ -11,16 +11,48 @@ namespace MenoPreDieta.Core
         {
             Catalog = new List<INameEntity>();
             Pairs = new List<INamePickEntity>();
+            UpdateQueue = new List<INamePickEntity>();
+            DeleteQueue = new List<INamePickEntity>();
         }
 
         public List<INameEntity> Catalog { get; }
 
         public List<INamePickEntity> Pairs { get; }
 
+        public List<INamePickEntity> UpdateQueue { get; }
+
+        public List<INamePickEntity> DeleteQueue { get; }
+
         public virtual async Task InitializeAsync()
         {
             await InitializeCatalogAsync();
             await InitializePairsAsync();
+        }
+
+        public void Update(INamePickEntity pair) => UpdateQueue.Add(pair);
+
+        public void Delete(INamePickEntity pair) => DeleteQueue.Add(pair);
+
+        public async Task ProcessUpdateQueueAsync()
+        {
+            if (UpdateQueue.Any())
+            {
+                var item = UpdateQueue.First();
+                await UpdateDatabaseAsync(item);
+                UpdateQueue.Remove(item);
+                await ProcessUpdateQueueAsync();
+            }
+        }
+
+        public async Task ProcessDeleteQueueAsync()
+        {
+            if (DeleteQueue.Any())
+            {
+                var item = DeleteQueue.First();
+                await DeleteFromDatabaseAsync(item);
+                DeleteQueue.Remove(item);
+                await ProcessDeleteQueueAsync();
+            }
         }
 
         private async Task InitializeCatalogAsync()
@@ -69,6 +101,8 @@ namespace MenoPreDieta.Core
 
         protected abstract Task<int> AddToDatabase(List<INamePickEntity> pairs);
 
-        public abstract Task<int> UpdateAsync(INamePickEntity pair);
+        public abstract Task<int> UpdateDatabaseAsync(INamePickEntity pair);
+
+        public abstract Task<int> DeleteFromDatabaseAsync(INamePickEntity pair);
     }
 }

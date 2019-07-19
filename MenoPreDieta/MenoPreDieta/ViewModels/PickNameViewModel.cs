@@ -25,8 +25,6 @@ namespace MenoPreDieta.ViewModels
         private bool isBusy;
         private bool isEnabled;
         private readonly IConfirmationDialog confirmationDialog;
-        private List<INamePickEntity> updateQueue;
-        private List<INamePickEntity> deleteQueue;
 
         protected PickNameViewModel([NotNull] IConfirmationDialog confirmationDialog)
         {
@@ -157,9 +155,6 @@ namespace MenoPreDieta.ViewModels
                 catalog = App.Names.Catalog;
                 NamesCount = catalog.Count;
                 pickPairs = App.Names.Pairs;
-
-                updateQueue = new List<INamePickEntity>();
-                deleteQueue = new List<INamePickEntity>();
                 Update();
             }
             finally
@@ -180,9 +175,9 @@ namespace MenoPreDieta.ViewModels
             {
                 namePick.PickedNameId = nameId;
                 namePick.IsNamePicked = true;
-                updateQueue.Add(namePick);
+                App.Names.Update(namePick);
                 Update();
-                await ProcessUpdateQueueAsync();
+                await App.Names.ProcessUpdateQueueAsync();
             }
         }
 
@@ -210,42 +205,18 @@ namespace MenoPreDieta.ViewModels
             pairsToRemove.ForEach(item =>
             {
                 pickPairs.Remove(item);
-                deleteQueue.Add(item);
+                App.Names.Delete(item);
             });
             Update();
-            await ProcessDeleteQueueAsync();
+            await App.Names.ProcessDeleteQueueAsync();
             MessagingCenter.Send(this, "NameDeleted");
         }
-
-        private async Task ProcessUpdateQueueAsync()
-        {
-            if (updateQueue.Any())
-            {
-                var item = updateQueue.First();
-                await App.Names.UpdateAsync(item);
-                updateQueue.Remove(item);
-                await ProcessUpdateQueueAsync();
-            }
-        }
-
-        private async Task ProcessDeleteQueueAsync()
-        {
-            if (deleteQueue.Any())
-            {
-                var item = deleteQueue.First();
-                await DeleteNamePicksAsync(item);
-                deleteQueue.Remove(item);
-                await ProcessDeleteQueueAsync();
-            }
-        }
-
-        protected abstract Task DeleteNamePicksAsync(INamePickEntity namePickEntity);
 
         private void Update()
         {
             var notPickedNamePairs = pickPairs.Where(pair => !pair.IsNamePicked).ToList();
-            deleteQueue.ForEach(item => notPickedNamePairs.Remove(item));
-            updateQueue.ForEach(item => notPickedNamePairs.Remove(item));
+            App.Names.DeleteQueue.ForEach(item => notPickedNamePairs.Remove(item));
+            App.Names.UpdateQueue.ForEach(item => notPickedNamePairs.Remove(item));
             if (notPickedNamePairs.Any())
             {
                 var pairsToPick = new List<INamePickEntity>();
