@@ -222,7 +222,7 @@ namespace MenoPreDieta.ViewModels
             if (updateQueue.Any())
             {
                 var item = updateQueue.First();
-                await UpdateNamePickAsync(item);
+                await App.Names.UpdateAsync(item);
                 updateQueue.Remove(item);
                 await ProcessUpdateQueueAsync();
             }
@@ -238,8 +238,6 @@ namespace MenoPreDieta.ViewModels
                 await ProcessDeleteQueueAsync();
             }
         }
-
-        protected abstract Task UpdateNamePickAsync(INamePickEntity namePickEntity);
 
         protected abstract Task DeleteNamePicksAsync(INamePickEntity namePickEntity);
 

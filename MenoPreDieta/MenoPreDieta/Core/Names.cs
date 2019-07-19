@@ -68,5 +68,7 @@ namespace MenoPreDieta.Core
         protected abstract INamePickEntity CreatePair(int firstId, int secondId);
 
         protected abstract Task<int> AddToDatabase(List<INamePickEntity> pairs);
+
+        public abstract Task<int> UpdateAsync(INamePickEntity pair);
     }
 }
