@@ -19,7 +19,6 @@ namespace MenoPreDieta.ViewModels
         private int remainingPairsCount;
         private double accuracy;
         private List<INameEntity> catalog;
-        private List<INamePickEntity> pickPairs;
         private readonly Random random;
         private INamePickEntity namePick;
         private bool isBusy;
@@ -155,7 +154,6 @@ namespace MenoPreDieta.ViewModels
                 IsBusy = true;
                 catalog = App.Names.Catalog;
                 NamesCount = catalog.Count;
-                pickPairs = App.Names.Pairs;
                 Update();
             }
             finally
@@ -200,12 +198,9 @@ namespace MenoPreDieta.ViewModels
 
         private async Task RemoveNameAsync(int nameId)
         {
-            var pairsToRemove =
-                pickPairs.Where(pair => pair.FirstNameId == nameId ||
-                                        pair.SecondNameId == nameId).ToList();
+            var pairsToRemove = App.Names.Pairs.With(nameId);
             pairsToRemove.ForEach(item =>
             {
-                pickPairs.Remove(item);
                 App.Names.Delete(item);
             });
             Update();
@@ -215,7 +210,7 @@ namespace MenoPreDieta.ViewModels
 
         private void Update()
         {
-            var notPickedNamePairs = pickPairs.Where(pair => !pair.IsNamePicked).ToList();
+            var notPickedNamePairs = App.Names.Pairs.NotPicked();
             App.Names.DeleteQueue.ForEach(item => notPickedNamePairs.Remove(item));
             App.Names.UpdateQueue.ForEach(item => notPickedNamePairs.Remove(item));
             if (notPickedNamePairs.Any())
@@ -254,8 +249,8 @@ namespace MenoPreDieta.ViewModels
 
         private void UpdateStats()
         {
-            PairsCount = pickPairs.Count;
-            RemainingPairsCount = pickPairs.Count(pickPair => !pickPair.IsNamePicked);
+            PairsCount = App.Names.Pairs.Count;
+            RemainingPairsCount = App.Names.Pairs.Count(pickPair => !pickPair.IsNamePicked);
             Accuracy = PairsCount > 0 ? 1 - (double) RemainingPairsCount / PairsCount : 0;
         }
 

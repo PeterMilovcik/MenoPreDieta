@@ -10,14 +10,14 @@ namespace MenoPreDieta.Core
         protected Names()
         {
             Catalog = new List<INameEntity>();
-            Pairs = new List<INamePickEntity>();
+            Pairs = new Pairs();
             UpdateQueue = new List<INamePickEntity>();
             DeleteQueue = new List<INamePickEntity>();
         }
 
         public List<INameEntity> Catalog { get; }
 
-        public List<INamePickEntity> Pairs { get; }
+        public Pairs Pairs { get; }
 
         public List<INamePickEntity> UpdateQueue { get; }
 
@@ -31,7 +31,11 @@ namespace MenoPreDieta.Core
 
         public void Update(INamePickEntity pair) => UpdateQueue.Add(pair);
 
-        public void Delete(INamePickEntity pair) => DeleteQueue.Add(pair);
+        public void Delete(INamePickEntity pair)
+        {
+            App.Names.Pairs.Remove(pair);
+            DeleteQueue.Add(pair);
+        }
 
         public async Task ProcessUpdateQueueAsync()
         {
