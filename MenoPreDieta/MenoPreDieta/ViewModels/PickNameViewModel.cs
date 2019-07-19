@@ -223,10 +223,8 @@ namespace MenoPreDieta.ViewModels
                     pairsToPick = notPickedNamePairs.Where(pair => pair.FirstNameId == First.Id).ToList();
                 }
 
-                App.Names.Pairs.Selected = GetRandomNamePick(
-                    pairsToPick.Any()
-                        ? pairsToPick
-                        : notPickedNamePairs);
+                var pairs = pairsToPick.Any() ? pairsToPick : notPickedNamePairs;
+                App.Names.Pairs.Selected = pairs.RandomItem();
                 UpdateFirstAndSecondName();
             }
             else
@@ -246,7 +244,7 @@ namespace MenoPreDieta.ViewModels
         private void UpdateStats()
         {
             PairsCount = App.Names.Pairs.Count;
-            RemainingPairsCount = App.Names.Pairs.Count(pickPair => !pickPair.IsNamePicked);
+            RemainingPairsCount = App.Names.Pairs.NotPicked().Count;
             Accuracy = PairsCount > 0 ? 1 - (double) RemainingPairsCount / PairsCount : 0;
         }
 
