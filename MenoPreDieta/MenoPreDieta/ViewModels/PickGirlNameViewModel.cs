@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-using MenoPreDieta.Dialogs;
-using MenoPreDieta.Entities;
+﻿using MenoPreDieta.Dialogs;
 using MenoPreDieta.Views;
 using Xamarin.Forms;
 
