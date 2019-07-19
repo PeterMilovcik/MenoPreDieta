@@ -5,24 +5,17 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:views="clr-namespace:MenoPreDieta.Views"
     BackgroundColor="{DynamicResource Primary}">
+    <FlyoutItem Title="TEST">
+        <Tab>
+            <ShellContent>
+                <views:VoteNamePage />
+            </ShellContent>
+        </Tab>
+    </FlyoutItem>
     <FlyoutItem Title="Hlavná stránka">
         <Tab>
             <ShellContent>
                 <views:MainPage />
-            </ShellContent>
-        </Tab>
-    </FlyoutItem>
-    <FlyoutItem Title="Vyber meno pre chlapca">
-        <Tab>
-            <ShellContent>
-                <views:PickBoyNamePage />
-            </ShellContent>
-        </Tab>
-    </FlyoutItem>
-    <FlyoutItem Title="Vyber meno pre dievča">
-        <Tab>
-            <ShellContent>
-                <views:PickGirlNamePage />
             </ShellContent>
         </Tab>
     </FlyoutItem>

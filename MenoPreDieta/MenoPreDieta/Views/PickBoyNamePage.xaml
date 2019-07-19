@@ -5,7 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:views="clr-namespace:MenoPreDieta.Views;assembly=MenoPreDieta"
     Title="Ktoré meno pre chlapca sa ti páči viac?"
-    Shell.BackgroundColor="{DynamicResource Blue}">
+    Shell.BackgroundColor="{DynamicResource PrimaryDark}">
     <ContentPage.ToolbarItems>
         <ToolbarItem
             Command="{Binding RestoreCommand}"

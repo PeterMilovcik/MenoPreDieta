@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+using MenoPreDieta.Core;
 using MenoPreDieta.Data;
 using Xamarin.Forms;
 
@@ -10,6 +9,17 @@ namespace MenoPreDieta
     public partial class App : Application
     {
         private static Database database;
+        private static Names boyNames;
+        private static Names girlNames;
+
+        public App()
+        {
+            Names = new UndefinedNames();
+            InitializeComponent();
+            MainPage = new AppShell();
+        }
+
+        public static Names Names { get; private set; }
 
         public static Database Database =>
             database ?? (database =
@@ -17,39 +27,26 @@ namespace MenoPreDieta
                     Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                     "database.db3")));
 
-        public App()
+        public static void PickBoyName()
         {
-            InitializeComponent();
-            MainPage = new AppShell();
+            Current.Resources["Primary"] = Current.Resources["BlueLight"];
+            Current.Resources["PrimaryDark"] = Current.Resources["Blue"];
+            Names = boyNames;
+        }
+
+        public static void PickGirlName()
+        {
+            Current.Resources["Primary"] = Current.Resources["PinkLight"];
+            Current.Resources["PrimaryDark"] = Current.Resources["Pink"];
+            Names = girlNames;
         }
 
         protected override async void OnStart()
         {
-            await InitializeNames();
-        }
-
-        private static async Task InitializeNames()
-        {
-            await InitializeBoyNames();
-            await InitializeGirlNames();
-        }
-
-        private static async Task InitializeBoyNames()
-        {
-            var names = await Database.GetBoyNamesAsync();
-            if (!names.Any())
-            {
-                await Database.InsertBoyNamesAsync(new BoyNames());
-            }
-        }
-
-        private static async Task InitializeGirlNames()
-        {
-            var names = await Database.GetGirlNamesAsync();
-            if (!names.Any())
-            {
-                await Database.InsertGirlNamesAsync(new GirlNames());
-            }
+            boyNames = new BoyNames();
+            girlNames = new GirlNames();
+            await boyNames.InitializeAsync();
+            await girlNames.InitializeAsync();
         }
 
         protected override void OnSleep()

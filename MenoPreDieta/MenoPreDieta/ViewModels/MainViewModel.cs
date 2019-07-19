@@ -8,9 +8,17 @@ namespace MenoPreDieta.ViewModels
         public MainViewModel()
         {
             PickBoyNameCommand = new Command(
-                async () => await Shell.Current.GoToAsync(nameof(PickBoyNamePage)));
+                async () =>
+                {
+                    App.PickBoyName();
+                    await Shell.Current.GoToAsync(nameof(PickBoyNamePage));
+                });
             PickGirlNameCommand = new Command(
-                async () => await Shell.Current.GoToAsync(nameof(PickGirlNamePage)));
+                async () =>
+                {
+                    App.PickGirlName();
+                    await Shell.Current.GoToAsync(nameof(PickGirlNamePage));
+                });
         }
 
         public Command PickBoyNameCommand { get; }

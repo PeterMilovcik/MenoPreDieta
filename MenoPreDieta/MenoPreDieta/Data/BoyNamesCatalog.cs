@@ -4,11 +4,11 @@ using MenoPreDieta.Entities;
 
 namespace MenoPreDieta.Data
 {
-    public class BoyNames : IEnumerable<BoyNameEntity>
+    public class BoyNamesCatalog : IEnumerable<BoyNameEntity>
     {
         private readonly List<BoyNameEntity> list;
 
-        public BoyNames()
+        public BoyNamesCatalog()
         {
             list = new List<BoyNameEntity>
             {

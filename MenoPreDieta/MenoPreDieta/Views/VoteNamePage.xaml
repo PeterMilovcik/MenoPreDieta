@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MenoPreDieta.Views.VoteNamePage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Shell.BackgroundColor="{Binding GenderColor}">
+    <ContentPage.Content>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Button
+                Grid.Column="0"
+                Margin="20"
+                BackgroundColor="{DynamicResource RedLight}"
+                CornerRadius="24"
+                Text="Nie" />
+            <Frame
+                Grid.Column="1"
+                Margin="0,20"
+                Padding="0"
+                HasShadow="True"
+                HorizontalOptions="Fill"
+                VerticalOptions="Fill">
+                <Label
+                    FontSize="Title"
+                    HorizontalOptions="Fill"
+                    HorizontalTextAlignment="Center"
+                    Text="Meno"
+                    VerticalOptions="Fill"
+                    VerticalTextAlignment="Center" />
+            </Frame>
+            <Button
+                Grid.Column="2"
+                Margin="20"
+                BackgroundColor="{DynamicResource GreenLight}"
+                CornerRadius="24"
+                Text="Áno" />
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

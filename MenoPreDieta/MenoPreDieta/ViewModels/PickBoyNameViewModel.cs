@@ -11,7 +11,6 @@ namespace MenoPreDieta.ViewModels
     {
         public PickBoyNameViewModel(IConfirmationDialog confirmationDialog) : base(confirmationDialog)
         {
-            GenderColor = (Color)Application.Current.Resources["BlueLight"];
             ShowRankedNamesCommand = new Command(
                 async () => await Shell.Current.GoToAsync(
                     nameof(RankedBoyNamesPage)));

@@ -14,13 +14,20 @@
 
             <Color x:Key="Blue">#2196f3</Color>
             <Color x:Key="BlueLight">#bbdefb</Color>
+
             <Color x:Key="Pink">#f06292</Color>
             <Color x:Key="PinkLight">#f8bbd0</Color>
+
             <Color x:Key="Red">#c62828</Color>
             <Color x:Key="RedDark">#b71c1c</Color>
+            <Color x:Key="RedLight">#ffcdd2</Color>
+
             <Color x:Key="Green">#43a047</Color>
             <Color x:Key="GreenDark">#2e7d32</Color>
+            <Color x:Key="GreenLight">#c8e6c9</Color>
+
             <Color x:Key="BrownLight">#a1887f</Color>
+            <Color x:Key="Brown">#795548</Color>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

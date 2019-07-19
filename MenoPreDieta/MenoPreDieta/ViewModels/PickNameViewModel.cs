@@ -6,7 +6,6 @@ using MenoPreDieta.Annotations;
 using MenoPreDieta.Dialogs;
 using MenoPreDieta.Entities;
 using MenoPreDieta.Models;
-using MenoPreDieta.Views;
 using Xamarin.Forms;
 
 namespace MenoPreDieta.ViewModels
@@ -27,7 +26,6 @@ namespace MenoPreDieta.ViewModels
         private TNamePickEntity namePick;
         private bool isBusy;
         private bool isEnabled;
-        private Color genderColor;
         private readonly IConfirmationDialog confirmationDialog;
         private List<TNamePickEntity> updateQueue;
         private List<TNamePickEntity> deleteQueue;
@@ -135,17 +133,6 @@ namespace MenoPreDieta.ViewModels
             {
                 if (value == isEnabled) return;
                 isEnabled = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public Color GenderColor
-        {
-            get => genderColor;
-            set
-            {
-                if (value.Equals(genderColor)) return;
-                genderColor = value;
                 OnPropertyChanged();
             }
         }
