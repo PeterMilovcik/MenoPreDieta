@@ -34,6 +34,7 @@ namespace MenoPreDieta.ViewModels
             PickSecondNameCommand = new Command(async () => await PickSecondNameAsync());
             RemoveFirstNameCommand = new Command(async () => await RemoveFirstNameAsync());
             RemoveSecondNameCommand = new Command(async () => await RemoveSecondNameAsync());
+            ResetCommand = new Command(async () => await ResetAsync());
             MessagingCenter.Subscribe<RankedBoyNamesViewModel>(
                 this, "ResetBoyNamePicks", sender => Initialize());
             MessagingCenter.Subscribe<RankedGirlNamesViewModel>(
@@ -141,9 +142,9 @@ namespace MenoPreDieta.ViewModels
 
         public Command RemoveSecondNameCommand { get; }
 
-        public abstract Command ShowRankedNamesCommand { get; }
+        public Command ResetCommand { get; }
 
-        public abstract Command ResetCommand { get; }
+        public abstract Command ShowRankedNamesCommand { get; }
 
         public abstract Command RestoreCommand { get; }
 
@@ -265,11 +266,9 @@ namespace MenoPreDieta.ViewModels
         {
             if (await confirmationDialog.ShowDialog())
             {
-                await RecreateTableAsync();
+                await App.Names.ResetPairsAsync();
                 Initialize();
             }
         }
-
-        protected abstract Task RecreateTableAsync();
     }
 }

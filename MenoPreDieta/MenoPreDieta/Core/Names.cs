@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Resources;
 using System.Threading.Tasks;
 using MenoPreDieta.Entities;
 
@@ -100,6 +101,8 @@ namespace MenoPreDieta.Core
         protected abstract INamePickEntity CreatePair(int firstId, int secondId);
 
         protected abstract Task<int> AddToDatabase(List<INamePickEntity> pairs);
+
+        public abstract Task ResetPairsAsync();
 
         public abstract Task<int> UpdateDatabaseAsync(INamePickEntity pair);
 

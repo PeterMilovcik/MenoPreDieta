@@ -13,19 +13,13 @@ namespace MenoPreDieta.ViewModels
             ShowRankedNamesCommand = new Command(
                 async () => await Shell.Current.GoToAsync(
                     nameof(RankedGirlNamesPage)));
-            ResetCommand = new Command(
-                async () => await ResetAsync());
             RestoreCommand = new Command(
-                async () => await Shell.Current.GoToAsync(nameof(RestoreGirlNamePage)));
+                async () => await Shell.Current.GoToAsync(
+                    nameof(RestoreGirlNamePage)));
         }
 
         public override Command ShowRankedNamesCommand { get; }
-
-        public override Command ResetCommand { get; }
-
-        public override Command RestoreCommand { get; }
         
-        protected override Task RecreateTableAsync() =>
-            App.Database.RecreateGirlNamesTableAsync();
+        public override Command RestoreCommand { get; }
     }
 }
