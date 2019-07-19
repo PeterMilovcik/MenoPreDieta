@@ -9,13 +9,13 @@ namespace MenoPreDieta.Core
     {
         protected Names()
         {
-            Catalog = new List<INameEntity>();
+            Catalog = new NameCatalog();
             Pairs = new Pairs();
             UpdateQueue = new List<INamePickEntity>();
             DeleteQueue = new List<INamePickEntity>();
         }
 
-        public List<INameEntity> Catalog { get; }
+        public NameCatalog Catalog { get; }
 
         public Pairs Pairs { get; }
 

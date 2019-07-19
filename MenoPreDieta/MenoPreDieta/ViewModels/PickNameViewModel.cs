@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using MenoPreDieta.Annotations;
 using MenoPreDieta.Dialogs;
 using MenoPreDieta.Entities;
+using MenoPreDieta.Extensions;
 using MenoPreDieta.Models;
 using Xamarin.Forms;
 
@@ -238,10 +239,8 @@ namespace MenoPreDieta.ViewModels
 
         private void UpdateFirstAndSecondName()
         {
-            var firstName = App.Names.Catalog.Single(name => name.Id == App.Names.Pairs.Selected.FirstNameId);
-            First = new NameModel(firstName.Id, firstName.Value);
-            var secondName = App.Names.Catalog.Single(name => name.Id == App.Names.Pairs.Selected.SecondNameId);
-            Second = new NameModel(secondName.Id, secondName.Value);
+            First = App.Names.Catalog.NameWithId(App.Names.Pairs.Selected.FirstNameId).ToNameModel();
+            Second = App.Names.Catalog.NameWithId(App.Names.Pairs.Selected.SecondNameId).ToNameModel();
         }
 
         private void UpdateStats()
