@@ -5,14 +5,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using MenoPreDieta.Annotations;
 using MenoPreDieta.Dialogs;
-using MenoPreDieta.Entities;
 using Xamarin.Forms;
 
 namespace MenoPreDieta.ViewModels
 {
-    public abstract class RankedNamesViewModel<TNameEntity, TNamePickEntity> : ViewModel
-        where TNameEntity : INameEntity
-        where TNamePickEntity : INamePickEntity
+    public abstract class RankedNamesViewModel : ViewModel
     {
         private ObservableCollection<Model> items;
         private bool isBusy;
@@ -45,19 +42,18 @@ namespace MenoPreDieta.ViewModels
             }
         }
         
-        public async Task LoadAsync()
+        public void Initialize()
         {
             try
             {
                 IsBusy = true;
-                var names = await GetNamesAsync();
-                var namePicks = (await GetNamePicksAsync()).Where(np => np.IsNamePicked);
+                var namePicks = App.Names.Pairs.Picked();
                 var groupedNamePicks = namePicks.GroupBy(gnp => gnp.PickedNameId);
                 var orderedGroupedNamePicks = groupedNamePicks.OrderByDescending(gnp => gnp.Count());
                 Items = new ObservableCollection<Model>();
                 foreach (var pick in orderedGroupedNamePicks)
                 {
-                    var name = names.Single(n => n.Id == pick.Key);
+                    var name = App.Names.Catalog.NameWithId(pick.Key);
                     Items.Add(new Model(name.Id, name.Value, pick.Count()));
                 }
             }
@@ -67,26 +63,17 @@ namespace MenoPreDieta.ViewModels
             }
         }
 
-        protected abstract Task<List<TNameEntity>> GetNamesAsync();
-
-        protected abstract Task<List<TNamePickEntity>> GetNamePicksAsync();
-
         public abstract Command ResetCommand { get; }
 
         protected async Task ResetAsync()
         {
             if (await ConfirmationDialog.ShowDialog())
             {
-                await RecreateTableAsync();
-                await PickNamesAsync();
-                await LoadAsync();
+                await App.Names.ResetPairsAsync();
                 await Shell.Current.Navigation.PopAsync();
+                MessagingCenter.Send(this, "PairsUpdated");
             }
         }
-
-        protected abstract Task PickNamesAsync();
-
-        protected abstract Task RecreateTableAsync();
 
         public class Model
         {

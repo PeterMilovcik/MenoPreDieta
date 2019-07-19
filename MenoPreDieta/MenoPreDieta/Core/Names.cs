@@ -70,7 +70,7 @@ namespace MenoPreDieta.Core
             }
         }
 
-        private async Task InitializePairsAsync()
+        protected async Task InitializePairsAsync()
         {
             Pairs.Clear();
             Pairs.AddRange(await GetPairsFromDatabase());

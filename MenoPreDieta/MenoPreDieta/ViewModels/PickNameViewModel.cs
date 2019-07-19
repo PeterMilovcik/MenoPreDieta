@@ -37,6 +37,8 @@ namespace MenoPreDieta.ViewModels
                 this, "ResetBoyNamePicks", sender => Initialize());
             MessagingCenter.Subscribe<RankedGirlNamesViewModel>(
                 this, "ResetGirlNamePicks", sender => Initialize());
+            MessagingCenter.Subscribe<RankedNamesViewModel>(
+                this, "PairsUpdated", sender => Initialize());
             MessagingCenter.Subscribe<RestoreBoyNameViewModel>(
                 this, "RestoreBoyName", sender => Initialize());
             MessagingCenter.Subscribe<RestoreGirlNameViewModel>(

@@ -14,5 +14,8 @@ namespace MenoPreDieta.Core
 
         public List<INamePickEntity> NotPicked() => 
             this.Where(pair => !pair.IsNamePicked).ToList();
+
+        public List<INamePickEntity> Picked() => 
+            this.Where(np => np.IsNamePicked).ToList();
     }
 }

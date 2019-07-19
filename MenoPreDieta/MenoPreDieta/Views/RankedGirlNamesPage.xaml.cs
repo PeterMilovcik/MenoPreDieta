@@ -17,10 +17,10 @@ namespace MenoPreDieta.Views
             BindingContext = viewModel;
         }
 
-        protected override async void OnAppearing()
+        protected override void OnAppearing()
         {
             base.OnAppearing();
-            await viewModel.LoadAsync();
+            viewModel.Initialize();
         }
     }
 }
