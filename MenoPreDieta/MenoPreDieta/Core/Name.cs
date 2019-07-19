@@ -15,6 +15,8 @@ namespace MenoPreDieta.Core
 
         public string Value { get; }
 
+        public bool IsLiked { get; set; }
+
         public bool Equals(Name other)
         {
             if (ReferenceEquals(null, other)) return false;
