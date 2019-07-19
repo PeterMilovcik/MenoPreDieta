@@ -7,7 +7,7 @@ using Xamarin.Forms;
 
 namespace MenoPreDieta.ViewModels
 {
-    public class PickBoyNameViewModel : PickNameViewModel<BoyNameEntity, BoyNamePickEntity>
+    public class PickBoyNameViewModel : PickNameViewModel<BoyNamePickEntity>
     {
         public PickBoyNameViewModel(IConfirmationDialog confirmationDialog) : base(confirmationDialog)
         {
@@ -31,10 +31,7 @@ namespace MenoPreDieta.ViewModels
 
         protected override BoyNamePickEntity CreateNamePickEntity(int firstId, int secondId) =>
             new BoyNamePickEntity {FirstNameId = firstId, SecondNameId = secondId};
-
-        protected override Task<List<BoyNameEntity>> GetNamesAsync() => 
-            App.Database.GetBoyNamesAsync();
-
+        
         protected override Task<List<BoyNamePickEntity>> GetNamePicksAsync() => 
             App.Database.GetBoyNamePicksAsync();
 

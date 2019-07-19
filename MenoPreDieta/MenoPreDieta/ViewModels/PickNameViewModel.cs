@@ -10,8 +10,7 @@ using Xamarin.Forms;
 
 namespace MenoPreDieta.ViewModels
 {
-    public abstract class PickNameViewModel<TNameEntity, TNamePickEntity> : ViewModel
-        where TNameEntity : INameEntity
+    public abstract class PickNameViewModel<TNamePickEntity> : ViewModel
         where TNamePickEntity : INamePickEntity
     {
         private NameModel first;
@@ -20,7 +19,7 @@ namespace MenoPreDieta.ViewModels
         private int pairsCount;
         private int remainingPairsCount;
         private double accuracy;
-        private List<TNameEntity> names;
+        private List<INameEntity> catalog;
         private List<TNamePickEntity> pickPairs;
         private readonly Random random;
         private TNamePickEntity namePick;
@@ -156,8 +155,8 @@ namespace MenoPreDieta.ViewModels
             try
             {
                 IsBusy = true;
-                names = await GetNamesAsync();
-                NamesCount = names.Count;
+                catalog = App.Names.Catalog;
+                NamesCount = catalog.Count;
                 pickPairs = await GetNamePicksAsync();
                 if (!pickPairs.Any())
                 {
@@ -176,12 +175,12 @@ namespace MenoPreDieta.ViewModels
 
         private async Task CreateNamePicks()
         {
-            for (int i = 0; i < names.Count; i++)
+            for (int i = 0; i < catalog.Count; i++)
             {
-                for (int j = i + 1; j < names.Count; j++)
+                for (int j = i + 1; j < catalog.Count; j++)
                 {
-                    var firstName = names[i];
-                    var secondName = names[j];
+                    var firstName = catalog[i];
+                    var secondName = catalog[j];
                     pickPairs.Add(CreateNamePickEntity(firstName.Id, secondName.Id));
                 }
             }
@@ -192,8 +191,6 @@ namespace MenoPreDieta.ViewModels
         protected abstract Task InsertToDatabase(List<TNamePickEntity> namePicks);
 
         protected abstract TNamePickEntity CreateNamePickEntity(int firstId, int secondId);
-
-        protected abstract Task<List<TNameEntity>> GetNamesAsync();
 
         protected abstract Task<List<TNamePickEntity>> GetNamePicksAsync();
 
@@ -270,14 +267,6 @@ namespace MenoPreDieta.ViewModels
 
         protected abstract Task UpdateNamePickAsync(TNamePickEntity namePickEntity);
 
-        private async Task RemovePairs(IEnumerable<TNamePickEntity> pairsToRemove)
-        {
-            foreach (var pairToRemove in pairsToRemove)
-            {
-                await DeleteNamePicksAsync(pairToRemove);
-            }
-        }
-
         protected abstract Task DeleteNamePicksAsync(TNamePickEntity namePickEntity);
 
         private void Update()
@@ -313,9 +302,9 @@ namespace MenoPreDieta.ViewModels
 
         private void UpdateFirstAndSecondName()
         {
-            var firstName = names.Single(name => name.Id == namePick.FirstNameId);
+            var firstName = catalog.Single(name => name.Id == namePick.FirstNameId);
             First = new NameModel(firstName.Id, firstName.Value);
-            var secondName = names.Single(name => name.Id == namePick.SecondNameId);
+            var secondName = catalog.Single(name => name.Id == namePick.SecondNameId);
             Second = new NameModel(secondName.Id, secondName.Value);
         }
 

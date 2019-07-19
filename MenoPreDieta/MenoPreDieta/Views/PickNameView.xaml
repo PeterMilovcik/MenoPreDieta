@@ -129,7 +129,7 @@
                 IsRunning="{Binding IsBusy}"
                 VerticalOptions="Center"
                 WidthRequest="70"
-                Color="{Binding GenderColor}" />
+                Color="{DynamicResource Primary}" />
 
         </Grid>
 

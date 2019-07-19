@@ -1,54 +1,32 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
-using MenoPreDieta.Data;
-using Xamarin.Forms;
-using Color = System.Drawing.Color;
+using MenoPreDieta.Entities;
 
 namespace MenoPreDieta.Core
 {
     public abstract class Names
     {
-        public abstract Color Color { get; }
-        public abstract Task InitializeAsync();
-    }
-
-    public class UndefinedNames : Names
-    {
-        public UndefinedNames()
+        protected Names()
         {
-            Color = Color.White;
+            Catalog = new List<INameEntity>();
         }
 
-        public override Color Color { get; }
+        public List<INameEntity> Catalog { get; }
 
-        public override Task InitializeAsync() => Task.CompletedTask;
-    }
-
-    public class BoyNames : Names
-    {
-        public override Color Color => (Color)Application.Current.Resources["BlueLight"];
-
-        public override async Task InitializeAsync()
+        public virtual async Task InitializeAsync()
         {
-            var names = await App.Database.GetBoyNamesAsync();
-            if (!names.Any())
+            Catalog.AddRange(await GetNamesFromDatabase());
+            if (!Catalog.Any())
             {
-                await App.Database.InsertBoyNamesAsync(new BoyNamesCatalog());
+                await AddNamesToDatabase();
+                Catalog.AddRange(await GetNamesFromDatabase());
             }
         }
-    }
 
-    public class GirlNames : Names
-    {
-        public override Color Color => (Color)Application.Current.Resources["PinkLight"];
+        protected abstract Task AddNamesToDatabase();
 
-        public override async Task InitializeAsync()
-        {
-            var names = await App.Database.GetGirlNamesAsync();
-            if (!names.Any())
-            {
-                await App.Database.InsertGirlNamesAsync(new GirlNamesCatalog());
-            }
-        }
+        protected abstract Task<List<INameEntity>> GetNamesFromDatabase();
     }
 }
