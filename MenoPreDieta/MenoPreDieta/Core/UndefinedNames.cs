@@ -14,5 +14,8 @@ namespace MenoPreDieta.Core
 
         protected override Task<List<INameEntity>> GetNamesFromDatabase() =>
             Task.FromResult(new List<INameEntity>());
+
+        protected override Task<List<INamePickEntity>> GetPairsFromDatabase() => 
+            Task.FromResult(new List<INamePickEntity>());
     }
 }

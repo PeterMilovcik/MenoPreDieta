@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using MenoPreDieta.Dialogs;
 using MenoPreDieta.Entities;
@@ -7,7 +8,7 @@ using Xamarin.Forms;
 
 namespace MenoPreDieta.ViewModels
 {
-    public class PickGirlNameViewModel : PickNameViewModel<GirlNamePickEntity>
+    public class PickGirlNameViewModel : PickNameViewModel
     {
         public PickGirlNameViewModel(IConfirmationDialog confirmationDialog) : base(confirmationDialog)
         {
@@ -26,20 +27,17 @@ namespace MenoPreDieta.ViewModels
 
         public override Command RestoreCommand { get; }
 
-        protected override Task InsertToDatabase(List<GirlNamePickEntity> namePicks) =>
-            App.Database.InsertGirlNamePicksAsync(namePicks);
+        protected override Task InsertToDatabase(List<INamePickEntity> namePicks) =>
+            App.Database.InsertGirlNamePicksAsync(namePicks.OfType<GirlNamePickEntity>());
 
-        protected override GirlNamePickEntity CreateNamePickEntity(int firstId, int secondId) =>
+        protected override INamePickEntity CreateNamePickEntity(int firstId, int secondId) =>
             new GirlNamePickEntity { FirstNameId = firstId, SecondNameId = secondId };
         
-        protected override Task<List<GirlNamePickEntity>> GetNamePicksAsync() =>
-            App.Database.GetGirlNamePicksAsync();
+        protected override Task UpdateNamePickAsync(INamePickEntity namePickEntity) =>
+            App.Database.UpdateGirlNamePickAsync(namePickEntity as GirlNamePickEntity);
 
-        protected override Task UpdateNamePickAsync(GirlNamePickEntity namePickEntity) =>
-            App.Database.UpdateGirlNamePickAsync(namePickEntity);
-
-        protected override Task DeleteNamePicksAsync(GirlNamePickEntity namePickEntity) =>
-            App.Database.DeleteGirlNamePickAsync(namePickEntity);
+        protected override Task DeleteNamePicksAsync(INamePickEntity namePickEntity) =>
+            App.Database.DeleteGirlNamePickAsync(namePickEntity as GirlNamePickEntity);
 
         protected override Task RecreateTableAsync() =>
             App.Database.RecreateGirlNamesTableAsync();

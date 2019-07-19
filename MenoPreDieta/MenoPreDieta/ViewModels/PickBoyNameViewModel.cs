@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using MenoPreDieta.Dialogs;
 using MenoPreDieta.Entities;
@@ -7,9 +8,10 @@ using Xamarin.Forms;
 
 namespace MenoPreDieta.ViewModels
 {
-    public class PickBoyNameViewModel : PickNameViewModel<BoyNamePickEntity>
+    public class PickBoyNameViewModel : PickNameViewModel
     {
-        public PickBoyNameViewModel(IConfirmationDialog confirmationDialog) : base(confirmationDialog)
+        public PickBoyNameViewModel(IConfirmationDialog confirmationDialog) 
+            : base(confirmationDialog)
         {
             ShowRankedNamesCommand = new Command(
                 async () => await Shell.Current.GoToAsync(
@@ -26,20 +28,17 @@ namespace MenoPreDieta.ViewModels
 
         public override Command RestoreCommand { get; }
 
-        protected override Task InsertToDatabase(List<BoyNamePickEntity> namePicks) => 
-            App.Database.InsertBoyNamePicksAsync(namePicks);
+        protected override Task InsertToDatabase(List<INamePickEntity> namePicks) => 
+            App.Database.InsertBoyNamePicksAsync(namePicks.OfType<BoyNamePickEntity>());
 
-        protected override BoyNamePickEntity CreateNamePickEntity(int firstId, int secondId) =>
+        protected override INamePickEntity CreateNamePickEntity(int firstId, int secondId) =>
             new BoyNamePickEntity {FirstNameId = firstId, SecondNameId = secondId};
         
-        protected override Task<List<BoyNamePickEntity>> GetNamePicksAsync() => 
-            App.Database.GetBoyNamePicksAsync();
+        protected override Task UpdateNamePickAsync(INamePickEntity namePickEntity) => 
+            App.Database.UpdateBoyNamePickAsync(namePickEntity as BoyNamePickEntity);
 
-        protected override Task UpdateNamePickAsync(BoyNamePickEntity namePickEntity) => 
-            App.Database.UpdateBoyNamePickAsync(namePickEntity);
-
-        protected override Task DeleteNamePicksAsync(BoyNamePickEntity namePickEntity) => 
-            App.Database.DeleteBoyNamePickAsync(namePickEntity);
+        protected override Task DeleteNamePicksAsync(INamePickEntity namePickEntity) => 
+            App.Database.DeleteBoyNamePickAsync(namePickEntity as BoyNamePickEntity);
 
         protected override Task RecreateTableAsync() => 
             App.Database.RecreateBoyNamesTableAsync();
