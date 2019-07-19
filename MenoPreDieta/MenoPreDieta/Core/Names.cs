@@ -38,10 +38,35 @@ namespace MenoPreDieta.Core
         {
             Pairs.Clear();
             Pairs.AddRange(await GetPairsFromDatabase());
+            if (!Pairs.Any())
+            {
+                await App.Names.CreatePairsAsync();
+            }
         }
 
-        protected abstract Task AddNamesToDatabase();
+        private async Task CreatePairsAsync()
+        {
+            for (int i = 0; i < Catalog.Count; i++)
+            {
+                for (int j = i + 1; j < Catalog.Count; j++)
+                {
+                    var firstName = Catalog[i];
+                    var secondName = Catalog[j];
+                    var pair = App.Names.CreatePair(firstName.Id, secondName.Id);
+                    if (pair != null) Pairs.Add(pair);
+                }
+            }
+            await AddToDatabase(Pairs);
+        }
+
+        protected abstract Task<int> AddNamesToDatabase();
+
         protected abstract Task<List<INameEntity>> GetNamesFromDatabase();
+
         protected abstract Task<List<INamePickEntity>> GetPairsFromDatabase();
+
+        protected abstract INamePickEntity CreatePair(int firstId, int secondId);
+
+        protected abstract Task<int> AddToDatabase(List<INamePickEntity> pairs);
     }
 }

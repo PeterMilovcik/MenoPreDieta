@@ -14,7 +14,13 @@ namespace MenoPreDieta.Core
         protected override async Task<List<INamePickEntity>> GetPairsFromDatabase() =>
             (await App.Database.GetGirlNamePicksAsync()).OfType<INamePickEntity>().ToList();
 
-        protected override async Task AddNamesToDatabase() =>
-            await App.Database.InsertGirlNamesAsync(new GirlNamesCatalog());
+        protected override INamePickEntity CreatePair(int firstId, int secondId) => 
+            new GirlNamePickEntity { FirstNameId = firstId, SecondNameId = secondId };
+
+        protected override Task<int> AddToDatabase(List<INamePickEntity> pairs) => 
+            App.Database.InsertGirlNamePicksAsync(pairs.OfType<GirlNamePickEntity>());
+
+        protected override Task<int> AddNamesToDatabase() =>
+            App.Database.InsertGirlNamesAsync(new GirlNamesCatalog());
     }
 }

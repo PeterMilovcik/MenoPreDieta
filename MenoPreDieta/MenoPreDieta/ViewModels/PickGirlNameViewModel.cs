@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using MenoPreDieta.Dialogs;
 using MenoPreDieta.Entities;
 using MenoPreDieta.Views;
@@ -27,12 +25,6 @@ namespace MenoPreDieta.ViewModels
 
         public override Command RestoreCommand { get; }
 
-        protected override Task InsertToDatabase(List<INamePickEntity> namePicks) =>
-            App.Database.InsertGirlNamePicksAsync(namePicks.OfType<GirlNamePickEntity>());
-
-        protected override INamePickEntity CreateNamePickEntity(int firstId, int secondId) =>
-            new GirlNamePickEntity { FirstNameId = firstId, SecondNameId = secondId };
-        
         protected override Task UpdateNamePickAsync(INamePickEntity namePickEntity) =>
             App.Database.UpdateGirlNamePickAsync(namePickEntity as GirlNamePickEntity);
 

@@ -37,13 +37,13 @@ namespace MenoPreDieta.ViewModels
             RemoveFirstNameCommand = new Command(async () => await RemoveFirstNameAsync());
             RemoveSecondNameCommand = new Command(async () => await RemoveSecondNameAsync());
             MessagingCenter.Subscribe<RankedBoyNamesViewModel>(
-                this, "ResetBoyNamePicks", async sender => await LoadAsync());
+                this, "ResetBoyNamePicks", sender => Initialize());
             MessagingCenter.Subscribe<RankedGirlNamesViewModel>(
-                this, "ResetGirlNamePicks", async sender => await LoadAsync());
+                this, "ResetGirlNamePicks", sender => Initialize());
             MessagingCenter.Subscribe<RestoreBoyNameViewModel>(
-                this, "RestoreBoyName", async sender => await LoadAsync());
+                this, "RestoreBoyName", sender => Initialize());
             MessagingCenter.Subscribe<RestoreGirlNameViewModel>(
-                this, "RestoreGirlName", async sender => await LoadAsync());
+                this, "RestoreGirlName", sender => Initialize());
         }
 
         public NameModel First
@@ -149,7 +149,7 @@ namespace MenoPreDieta.ViewModels
 
         public abstract Command RestoreCommand { get; }
 
-        public virtual async Task LoadAsync()
+        public void Initialize()
         {
             try
             {
@@ -157,10 +157,6 @@ namespace MenoPreDieta.ViewModels
                 catalog = App.Names.Catalog;
                 NamesCount = catalog.Count;
                 pickPairs = App.Names.Pairs;
-                if (!pickPairs.Any())
-                {
-                    await CreateNamePicks();
-                }
 
                 updateQueue = new List<INamePickEntity>();
                 deleteQueue = new List<INamePickEntity>();
@@ -171,25 +167,6 @@ namespace MenoPreDieta.ViewModels
                 IsBusy = false;
             }
         }
-
-        private async Task CreateNamePicks()
-        {
-            for (int i = 0; i < catalog.Count; i++)
-            {
-                for (int j = i + 1; j < catalog.Count; j++)
-                {
-                    var firstName = catalog[i];
-                    var secondName = catalog[j];
-                    pickPairs.Add(CreateNamePickEntity(firstName.Id, secondName.Id));
-                }
-            }
-
-            await InsertToDatabase(pickPairs);
-        }
-
-        protected abstract Task InsertToDatabase(List<INamePickEntity> namePicks);
-
-        protected abstract INamePickEntity CreateNamePickEntity(int firstId, int secondId);
 
         private async Task PickFirstNameAsync() => 
             await PickNameAsync(namePick.FirstNameId);
@@ -320,7 +297,7 @@ namespace MenoPreDieta.ViewModels
             if (await confirmationDialog.ShowDialog())
             {
                 await RecreateTableAsync();
-                await LoadAsync();
+                Initialize();
             }
         }
 
