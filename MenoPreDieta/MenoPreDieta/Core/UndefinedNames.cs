@@ -12,7 +12,7 @@ namespace MenoPreDieta.Core
         protected override Task<int> AddNamesToDatabase() => 
             Task.FromResult(0);
 
-        protected override Task<int> AddToDatabase(List<INamePickEntity> pairs) => 
+        public override Task<int> AddToDatabase(List<INamePickEntity> pairs) => 
             Task.FromResult(0);
 
         public override Task ResetPairsAsync() => 
@@ -30,7 +30,7 @@ namespace MenoPreDieta.Core
         protected override Task<List<INamePickEntity>> GetPairsFromDatabase() => 
             Task.FromResult(new List<INamePickEntity>());
 
-        protected override INamePickEntity CreatePair(int firstId, int secondId) => 
+        public override INamePickEntity CreatePair(int firstId, int secondId) => 
             default;
     }
 }

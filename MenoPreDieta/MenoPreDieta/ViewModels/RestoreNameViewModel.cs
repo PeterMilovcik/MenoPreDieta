@@ -1,33 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
 using MenoPreDieta.Entities;
 using Xamarin.Forms;
 
 namespace MenoPreDieta.ViewModels
 {
-    public abstract class RestoreNameViewModel<TNameEntity, TNamePickEntity> : ViewModel
-        where TNameEntity : INameEntity
-        where TNamePickEntity : INamePickEntity
+    public class RestoreNameViewModel : ViewModel
     {
-        private ObservableCollection<TNameEntity> items;
-        private bool isBusy;
-        private Color genderColor;
-        private TNameEntity selectedItem;
+        private ObservableCollection<INameEntity> items;
+        private INameEntity selectedItem;
 
-        protected RestoreNameViewModel()
+        public RestoreNameViewModel()
         {
-            RefreshCommand = new Command(async ()=> await LoadAsync());
+            RefreshCommand = new Command(Initialize);
             Random = new Random();
+            RestoreNameCommand = new Command(async () => await RestoreNameAsync());
             MessagingCenter.Subscribe<PickNameViewModel>(
-                this, "NameDeleted", async sender => await LoadAsync());
+                this, "NameDeleted", sender => Initialize());
         }
+
+        public void Initialize() => 
+            Items = new ObservableCollection<INameEntity>(App.Names.Removed());
 
         protected Random Random { get; }
 
-        public TNameEntity SelectedItem
+        public INameEntity SelectedItem
         {
             get => selectedItem;
             set
@@ -42,9 +41,9 @@ namespace MenoPreDieta.ViewModels
             }
         }
 
-        public abstract Command RestoreNameCommand { get; }
+        public Command RestoreNameCommand { get; }
 
-        public ObservableCollection<TNameEntity> Items
+        public ObservableCollection<INameEntity> Items
         {
             get => items;
             set
@@ -55,58 +54,28 @@ namespace MenoPreDieta.ViewModels
             }
         }
 
-        public bool IsBusy
-        {
-            get => isBusy;
-            set
-            {
-                if (value == isBusy) return;
-                isBusy = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public Color GenderColor
-        {
-            get => genderColor;
-            set
-            {
-                if (value.Equals(genderColor)) return;
-                genderColor = value;
-                OnPropertyChanged();
-            }
-        }
-
         public Command RefreshCommand { get; }
 
-        public async Task LoadAsync()
+        private async Task RestoreNameAsync()
         {
-            try
+            if (SelectedItem == null) return;
+            var newPairs = new List<INamePickEntity>();
+            foreach (var nameId in App.Names.Pairs.NameIds())
             {
-                IsBusy = true;
-                Names = await GetNamesAsync();
-                NamePicks = await GetNamePicksAsync();
-                var notRemovedNameIds = new HashSet<int>();
-                NamePicks.ForEach(namePick =>
+                var firstName = SelectedItem;
+                var secondName = App.Names.Catalog.NameWithId(nameId);
+                if (Random.NextDouble() > 0.5)
                 {
-                    notRemovedNameIds.Add(namePick.FirstNameId);
-                    notRemovedNameIds.Add(namePick.SecondNameId);
-                });
-                Items = new ObservableCollection<TNameEntity>(
-                    Names.Where(name => !notRemovedNameIds.Contains(name.Id)));
+                    var temp = firstName;
+                    firstName = secondName;
+                    secondName = temp;
+                }
+
+                App.Names.Pairs.Add(App.Names.CreatePair(firstName.Id, secondName.Id));
             }
-            finally
-            {
-                IsBusy = false;
-            }
+            await App.Names.AddToDatabase(newPairs);
+            await Shell.Current.Navigation.PopAsync();
+            MessagingCenter.Send(this, "PairsUpdated");
         }
-
-        protected List<TNamePickEntity> NamePicks { get; private set; }
-
-        protected List<TNameEntity> Names { get; private set; }
-
-        protected abstract Task<List<TNameEntity>> GetNamesAsync();
-
-        protected abstract Task<List<TNamePickEntity>> GetNamePicksAsync();
     }
 }

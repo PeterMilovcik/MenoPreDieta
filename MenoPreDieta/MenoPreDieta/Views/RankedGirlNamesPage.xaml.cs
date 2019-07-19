@@ -8,12 +8,12 @@ namespace MenoPreDieta.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class RankedGirlNamesPage : ContentPage
     {
-        private readonly RankedGirlNamesViewModel viewModel;
+        private readonly RankedNamesViewModel viewModel;
 
         public RankedGirlNamesPage()
         {
             InitializeComponent();
-            viewModel = new RankedGirlNamesViewModel(new ConfirmationDialog(this));
+            viewModel = new RankedNamesViewModel(new ConfirmationDialog(this));
             BindingContext = viewModel;
         }
 

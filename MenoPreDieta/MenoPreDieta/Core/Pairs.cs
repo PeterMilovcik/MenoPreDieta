@@ -17,5 +17,16 @@ namespace MenoPreDieta.Core
 
         public List<INamePickEntity> Picked() => 
             this.Where(np => np.IsNamePicked).ToList();
+
+        public List<int> NameIds()
+        {
+            var notRemovedNameIds = new HashSet<int>();
+            App.Names.Pairs.ForEach(namePick =>
+            {
+                notRemovedNameIds.Add(namePick.FirstNameId);
+                notRemovedNameIds.Add(namePick.SecondNameId);
+            });
+            return notRemovedNameIds.ToList();
+        }
     }
 }

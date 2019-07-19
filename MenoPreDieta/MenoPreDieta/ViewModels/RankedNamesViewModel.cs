@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,15 +8,20 @@ using Xamarin.Forms;
 
 namespace MenoPreDieta.ViewModels
 {
-    public abstract class RankedNamesViewModel : ViewModel
+    public class RankedNamesViewModel : ViewModel
     {
         private ObservableCollection<Model> items;
         private bool isBusy;
         protected IConfirmationDialog ConfirmationDialog { get; }
 
-        protected RankedNamesViewModel([NotNull] IConfirmationDialog confirmationDialog)
+        public RankedNamesViewModel([NotNull] IConfirmationDialog confirmationDialog)
         {
             ConfirmationDialog = confirmationDialog ?? throw new ArgumentNullException(nameof(confirmationDialog));
+            ResetCommand = new Command(
+                async () =>
+                {
+                    await ResetAsync();
+                });
         }
 
         public ObservableCollection<Model> Items
@@ -63,7 +67,7 @@ namespace MenoPreDieta.ViewModels
             }
         }
 
-        public abstract Command ResetCommand { get; }
+        public Command ResetCommand { get; }
 
         protected async Task ResetAsync()
         {

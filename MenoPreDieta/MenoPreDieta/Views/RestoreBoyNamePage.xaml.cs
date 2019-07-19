@@ -7,19 +7,19 @@ namespace MenoPreDieta.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class RestoreBoyNamePage : ContentPage
     {
-        private readonly RestoreBoyNameViewModel viewModel;
+        private readonly RestoreNameViewModel viewModel;
 
         public RestoreBoyNamePage()
         {
             InitializeComponent();
-            viewModel = new RestoreBoyNameViewModel();
+            viewModel = new RestoreNameViewModel();
             BindingContext = viewModel;
         }
 
-        protected override async void OnAppearing()
+        protected override void OnAppearing()
         {
             base.OnAppearing();
-            await viewModel.LoadAsync();
+            viewModel.Initialize();
         }
     }
 }

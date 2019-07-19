@@ -20,8 +20,6 @@ namespace MenoPreDieta.ViewModels
         private int remainingPairsCount;
         private double accuracy;
         private readonly Random random;
-        private bool isBusy;
-        private bool isEnabled;
         private readonly IConfirmationDialog confirmationDialog;
 
         protected PickNameViewModel([NotNull] IConfirmationDialog confirmationDialog)
@@ -33,16 +31,10 @@ namespace MenoPreDieta.ViewModels
             RemoveFirstNameCommand = new Command(async () => await RemoveFirstNameAsync());
             RemoveSecondNameCommand = new Command(async () => await RemoveSecondNameAsync());
             ResetCommand = new Command(async () => await ResetAsync());
-            MessagingCenter.Subscribe<RankedBoyNamesViewModel>(
-                this, "ResetBoyNamePicks", sender => Initialize());
-            MessagingCenter.Subscribe<RankedGirlNamesViewModel>(
-                this, "ResetGirlNamePicks", sender => Initialize());
             MessagingCenter.Subscribe<RankedNamesViewModel>(
                 this, "PairsUpdated", sender => Initialize());
-            MessagingCenter.Subscribe<RestoreBoyNameViewModel>(
-                this, "RestoreBoyName", sender => Initialize());
-            MessagingCenter.Subscribe<RestoreGirlNameViewModel>(
-                this, "RestoreGirlName", sender => Initialize());
+            MessagingCenter.Subscribe<RestoreNameViewModel>(
+                this, "PairsUpdated", sender => Initialize());
         }
 
         public NameModel First
@@ -111,29 +103,6 @@ namespace MenoPreDieta.ViewModels
             }
         }
 
-        public bool IsBusy
-        {
-            get => isBusy;
-            set
-            {
-                if (value == isBusy) return;
-                isBusy = value;
-                IsEnabled = !value;
-                OnPropertyChanged();
-            }
-        }
-
-        public bool IsEnabled
-        {
-            get => isEnabled;
-            set
-            {
-                if (value == isEnabled) return;
-                isEnabled = value;
-                OnPropertyChanged();
-            }
-        }
-
         public Command PickFirstNameCommand { get; }
 
         public Command PickSecondNameCommand { get; }
@@ -150,16 +119,8 @@ namespace MenoPreDieta.ViewModels
 
         public void Initialize()
         {
-            try
-            {
-                IsBusy = true;
-                NamesCount = App.Names.Catalog.Count;
-                Update();
-            }
-            finally
-            {
-                IsBusy = false;
-            }
+            NamesCount = App.Names.Catalog.Count;
+            Update();
         }
 
         private async Task PickFirstNameAsync() => 

@@ -101,14 +101,20 @@ namespace MenoPreDieta.Core
 
         protected abstract Task<List<INamePickEntity>> GetPairsFromDatabase();
 
-        protected abstract INamePickEntity CreatePair(int firstId, int secondId);
+        public abstract INamePickEntity CreatePair(int firstId, int secondId);
 
-        protected abstract Task<int> AddToDatabase(List<INamePickEntity> pairs);
+        public abstract Task<int> AddToDatabase(List<INamePickEntity> pairs);
 
         public abstract Task ResetPairsAsync();
 
         public abstract Task<int> UpdateDatabaseAsync(INamePickEntity pair);
 
         public abstract Task<int> DeleteFromDatabaseAsync(INamePickEntity pair);
+
+        public IEnumerable<INameEntity> Removed()
+        {
+            var notRemovedNameIds = App.Names.Pairs.NameIds();
+            return App.Names.Catalog.Where(name => !notRemovedNameIds.Contains(name.Id));
+        }
     }
 }
