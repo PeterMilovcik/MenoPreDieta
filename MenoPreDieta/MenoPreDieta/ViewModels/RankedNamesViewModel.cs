@@ -16,7 +16,6 @@ namespace MenoPreDieta.ViewModels
     {
         private ObservableCollection<Model> items;
         private bool isBusy;
-        private Color genderColor;
         protected IConfirmationDialog ConfirmationDialog { get; }
 
         protected RankedNamesViewModel([NotNull] IConfirmationDialog confirmationDialog)
@@ -45,18 +44,7 @@ namespace MenoPreDieta.ViewModels
                 OnPropertyChanged();
             }
         }
-
-        public Color GenderColor
-        {
-            get => genderColor;
-            set
-            {
-                if (value.Equals(genderColor)) return;
-                genderColor = value;
-                OnPropertyChanged();
-            }
-        }
-
+        
         public async Task LoadAsync()
         {
             try

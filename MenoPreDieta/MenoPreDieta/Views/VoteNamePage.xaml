@@ -3,7 +3,8 @@
     x:Class="MenoPreDieta.Views.VoteNamePage"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    Shell.BackgroundColor="{Binding GenderColor}">
+    Title="Páči sa ti toto meno?"
+    Shell.BackgroundColor="{DynamicResource PrimaryDark}">
     <ContentPage.Content>
         <Grid>
             <Grid.ColumnDefinitions>
@@ -14,27 +15,23 @@
             <Button
                 Grid.Column="0"
                 Margin="20"
+                Padding="20,0"
                 BackgroundColor="{DynamicResource RedLight}"
                 CornerRadius="24"
                 Text="Nie" />
-            <Frame
+            <Label
                 Grid.Column="1"
                 Margin="0,20"
-                Padding="0"
-                HasShadow="True"
+                FontSize="Title"
                 HorizontalOptions="Fill"
-                VerticalOptions="Fill">
-                <Label
-                    FontSize="Title"
-                    HorizontalOptions="Fill"
-                    HorizontalTextAlignment="Center"
-                    Text="Meno"
-                    VerticalOptions="Fill"
-                    VerticalTextAlignment="Center" />
-            </Frame>
+                HorizontalTextAlignment="Center"
+                Text="Meno"
+                VerticalOptions="Fill"
+                VerticalTextAlignment="Center" />
             <Button
                 Grid.Column="2"
                 Margin="20"
+                Padding="20,0"
                 BackgroundColor="{DynamicResource GreenLight}"
                 CornerRadius="24"
                 Text="Áno" />
