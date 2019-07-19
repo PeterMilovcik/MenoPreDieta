@@ -6,6 +6,8 @@ namespace MenoPreDieta.Core
 {
     public class Pairs : List<INamePickEntity>
     {
+        public INamePickEntity Selected { get; set; }
+
         public List<INamePickEntity> With(int nameId) =>
             this.Where(pair => pair.FirstNameId == nameId ||
                                pair.SecondNameId == nameId).ToList();

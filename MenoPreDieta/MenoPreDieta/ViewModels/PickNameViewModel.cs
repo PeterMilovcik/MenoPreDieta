@@ -19,7 +19,6 @@ namespace MenoPreDieta.ViewModels
         private int remainingPairsCount;
         private double accuracy;
         private readonly Random random;
-        private INamePickEntity namePick;
         private bool isBusy;
         private bool isEnabled;
         private readonly IConfirmationDialog confirmationDialog;
@@ -161,18 +160,18 @@ namespace MenoPreDieta.ViewModels
         }
 
         private async Task PickFirstNameAsync() => 
-            await PickNameAsync(namePick.FirstNameId);
+            await PickNameAsync(App.Names.Pairs.Selected.FirstNameId);
 
         private async Task PickSecondNameAsync() => 
-            await PickNameAsync(namePick.SecondNameId);
+            await PickNameAsync(App.Names.Pairs.Selected.SecondNameId);
 
         private async Task PickNameAsync(int nameId)
         {
-            if (namePick != null)
+            if (App.Names.Pairs.Selected != null)
             {
-                namePick.PickedNameId = nameId;
-                namePick.IsNamePicked = true;
-                App.Names.Update(namePick);
+                App.Names.Pairs.Selected.PickedNameId = nameId;
+                App.Names.Pairs.Selected.IsNamePicked = true;
+                App.Names.Update(App.Names.Pairs.Selected);
                 Update();
                 await App.Names.ProcessUpdateQueueAsync();
             }
@@ -223,7 +222,7 @@ namespace MenoPreDieta.ViewModels
                     pairsToPick = notPickedNamePairs.Where(pair => pair.FirstNameId == First.Id).ToList();
                 }
 
-                namePick = GetRandomNamePick(
+                App.Names.Pairs.Selected = GetRandomNamePick(
                     pairsToPick.Any()
                         ? pairsToPick
                         : notPickedNamePairs);
@@ -239,9 +238,9 @@ namespace MenoPreDieta.ViewModels
 
         private void UpdateFirstAndSecondName()
         {
-            var firstName = App.Names.Catalog.Single(name => name.Id == namePick.FirstNameId);
+            var firstName = App.Names.Catalog.Single(name => name.Id == App.Names.Pairs.Selected.FirstNameId);
             First = new NameModel(firstName.Id, firstName.Value);
-            var secondName = App.Names.Catalog.Single(name => name.Id == namePick.SecondNameId);
+            var secondName = App.Names.Catalog.Single(name => name.Id == App.Names.Pairs.Selected.SecondNameId);
             Second = new NameModel(secondName.Id, secondName.Value);
         }
 
