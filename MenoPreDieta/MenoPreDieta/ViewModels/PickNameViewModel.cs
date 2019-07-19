@@ -18,7 +18,6 @@ namespace MenoPreDieta.ViewModels
         private int pairsCount;
         private int remainingPairsCount;
         private double accuracy;
-        private List<INameEntity> catalog;
         private readonly Random random;
         private INamePickEntity namePick;
         private bool isBusy;
@@ -152,8 +151,7 @@ namespace MenoPreDieta.ViewModels
             try
             {
                 IsBusy = true;
-                catalog = App.Names.Catalog;
-                NamesCount = catalog.Count;
+                NamesCount = App.Names.Catalog.Count;
                 Update();
             }
             finally
@@ -241,9 +239,9 @@ namespace MenoPreDieta.ViewModels
 
         private void UpdateFirstAndSecondName()
         {
-            var firstName = catalog.Single(name => name.Id == namePick.FirstNameId);
+            var firstName = App.Names.Catalog.Single(name => name.Id == namePick.FirstNameId);
             First = new NameModel(firstName.Id, firstName.Value);
-            var secondName = catalog.Single(name => name.Id == namePick.SecondNameId);
+            var secondName = App.Names.Catalog.Single(name => name.Id == namePick.SecondNameId);
             Second = new NameModel(secondName.Id, secondName.Value);
         }
 
