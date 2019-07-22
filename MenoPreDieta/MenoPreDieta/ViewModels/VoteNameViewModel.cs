@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MenoPreDieta.Dialogs;
 using MenoPreDieta.Entities;
 using MenoPreDieta.Extensions;
 using MenoPreDieta.Views;
@@ -9,21 +10,27 @@ using Xamarin.Forms;
 
 namespace MenoPreDieta.ViewModels
 {
-    public class VoteNameViewModel : ViewModel, ILoadableAsync
+    public class VoteNameViewModel : ViewModel
     {
         private NameEntity name;
         private List<NameEntity> notProcessedNames;
         private double progress;
+        private readonly IConfirmationDialog confirmationDialog;
+        private bool isBusy;
 
-        public VoteNameViewModel()
-        { 
+        public VoteNameViewModel(IConfirmationDialog confirmationDialog)
+        {
+            this.confirmationDialog = confirmationDialog;
             YesCommand = new Command(async ()=> await YesAsync());
             NoCommand = new Command(async ()=> await NoAsync());
+            ResetCommand = new Command(async () => await ResetWithConfirmationAsync());
         }
 
         public Command YesCommand { get; }
 
         public Command NoCommand { get; }
+
+        public Command ResetCommand { get; }
 
         public NameEntity Name
         {
@@ -43,6 +50,17 @@ namespace MenoPreDieta.ViewModels
             {
                 if (value.Equals(progress)) return;
                 progress = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool IsBusy
+        {
+            get => isBusy;
+            set
+            {
+                if (value == isBusy) return;
+                isBusy = value;
                 OnPropertyChanged();
             }
         }
@@ -117,6 +135,37 @@ namespace MenoPreDieta.ViewModels
             if (Name == null)
             {
                 await Shell.Current.GoToAsync(nameof(PickNamePage));
+            }
+        }
+
+        private async Task ResetWithConfirmationAsync()
+        {
+            try
+            {
+                if (await confirmationDialog.ShowDialog())
+                {
+                    await ResetAsync();
+                    await Shell.Current.Navigation.PopToRootAsync();
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        private async Task ResetAsync()
+        {
+            try
+            {
+                IsBusy = true;
+                await App.Names.ResetAsync();
+                await LoadAsync();
+            }
+            finally
+            {
+                IsBusy = false;
             }
         }
     }

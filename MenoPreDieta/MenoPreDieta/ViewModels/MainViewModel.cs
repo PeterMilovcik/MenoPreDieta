@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using MenoPreDieta.Dialogs;
 using MenoPreDieta.Views;
 using Xamarin.Forms;
 
