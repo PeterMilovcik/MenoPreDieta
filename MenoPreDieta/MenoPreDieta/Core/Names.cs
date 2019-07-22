@@ -15,7 +15,6 @@ namespace MenoPreDieta.Core
             Database = database;
             Catalog = new NameCatalog();
             Picks = new Picks();
-            UpdateQueue = new List<PickEntity>();
         }
 
         protected Database Database { get; }
@@ -24,32 +23,15 @@ namespace MenoPreDieta.Core
 
         public Picks Picks { get; }
 
-        public List<PickEntity> UpdateQueue { get; }
-
         public List<NameEntity> Processed => 
             Catalog.Where(name => name.IsProcessed).ToList();
 
         public List<NameEntity> NotProcessed =>
             Catalog.Where(name => !name.IsProcessed).ToList();
 
-        public virtual async Task InitializeAsync()
-        {
-            await InitializeCatalogAsync();
-            //await InitializePicksAsync();
-        }
+        public virtual Task InitializeAsync() => InitializeCatalogAsync();
 
-        public void Update(PickEntity pick) => UpdateQueue.Add(pick);
-
-        public async Task ProcessUpdateQueueAsync()
-        {
-            if (UpdateQueue.Any())
-            {
-                var pick = UpdateQueue.First();
-                await Database.UpdatePickAsync(pick);
-                UpdateQueue.Remove(pick);
-                await ProcessUpdateQueueAsync();
-            }
-        }
+        public async Task UpdateAsync(PickEntity pick) => await Database.UpdatePickAsync(pick);
 
         private async Task InitializeCatalogAsync()
         {

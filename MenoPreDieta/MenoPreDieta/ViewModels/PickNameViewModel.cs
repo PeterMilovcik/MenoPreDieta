@@ -113,7 +113,7 @@ namespace MenoPreDieta.ViewModels
         public async Task InitializeAsync()
         {
             await App.Names.InitializePicksAsync();
-            Update();
+            await UpdateAsync();
         }
 
         private async Task PickFirstNameAsync()
@@ -148,13 +148,12 @@ namespace MenoPreDieta.ViewModels
             {
                 App.Names.Picks.Selected.PickedNameId = nameId;
                 App.Names.Picks.Selected.IsProcessed = true;
-                App.Names.Update(App.Names.Picks.Selected);
-                Update();
-                await App.Names.ProcessUpdateQueueAsync();
+                await App.Names.UpdateAsync(App.Names.Picks.Selected);
+                await UpdateAsync();
             }
         }
 
-        private void Update()
+        private async Task UpdateAsync()
         {
             if (App.Names.Picks.NotProcessed.Any())
             {
@@ -163,6 +162,7 @@ namespace MenoPreDieta.ViewModels
             }
             else
             {
+                await Shell.Current.Navigation.PopToRootAsync(false);
                 ShowRankedNamesCommand.Execute(null);
             }
 

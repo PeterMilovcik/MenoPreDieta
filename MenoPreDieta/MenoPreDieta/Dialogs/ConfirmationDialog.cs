@@ -9,7 +9,7 @@ namespace MenoPreDieta.Dialogs
         public async Task<bool> ShowDialog() => 
             await Shell.Current.Navigation.NavigationStack.Last().DisplayAlert(
                 "Otázka", 
-                "Naozaj chcete začať odznova?", 
+                "Naozaj chceš začať odznova?", 
                 "Áno", 
                 "Nie");
     }
