@@ -14,12 +14,9 @@ namespace MenoPreDieta
         private void RegisterRoutes()
         {
             Routing.RegisterRoute(nameof(MainPage), typeof(MainPage));
-            Routing.RegisterRoute(nameof(PickBoyNamePage), typeof(PickBoyNamePage));
-            Routing.RegisterRoute(nameof(PickGirlNamePage), typeof(PickGirlNamePage));
-            Routing.RegisterRoute(nameof(RankedBoyNamesPage), typeof(RankedBoyNamesPage));
-            Routing.RegisterRoute(nameof(RankedGirlNamesPage), typeof(RankedGirlNamesPage));
-            Routing.RegisterRoute(nameof(RestoreBoyNamePage), typeof(RestoreBoyNamePage));
-            Routing.RegisterRoute(nameof(RestoreGirlNamePage), typeof(RestoreGirlNamePage));
+            Routing.RegisterRoute(nameof(VoteNamePage), typeof(VoteNamePage));
+            Routing.RegisterRoute(nameof(PickNamePage), typeof(PickNamePage));
+            Routing.RegisterRoute(nameof(RankedNamesPage), typeof(RankedNamesPage));
         }
     }
 }

@@ -2,13 +2,13 @@
 
 namespace MenoPreDieta.Entities
 {
-    public class GirlNamePickEntity : INamePickEntity
+    public class PickEntity
     {
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
         public int FirstNameId { get; set; }
         public int SecondNameId { get; set; }
         public int PickedNameId { get; set; }
-        public bool IsNamePicked { get; set; }
+        public bool IsProcessed { get; set; }
     }
 }

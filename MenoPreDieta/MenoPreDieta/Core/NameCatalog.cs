@@ -4,8 +4,8 @@ using MenoPreDieta.Entities;
 
 namespace MenoPreDieta.Core
 {
-    public class NameCatalog : List<INameEntity>
+    public class NameCatalog : List<NameEntity>
     {
-        public INameEntity NameWithId(int nameId) => this.Single(name => name.Id == nameId);
+        public NameEntity NameWithId(int nameId) => this.Single(name => name.Id == nameId);
     }
 }

@@ -1,40 +1,34 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MenoPreDieta.Annotations;
 using MenoPreDieta.Dialogs;
-using MenoPreDieta.Entities;
 using MenoPreDieta.Extensions;
 using MenoPreDieta.Models;
+using MenoPreDieta.Views;
 using Xamarin.Forms;
 
 namespace MenoPreDieta.ViewModels
 {
-    public abstract class PickNameViewModel : ViewModel
+    public class PickNameViewModel : ViewModel
     {
         private NameModel first;
         private NameModel second;
-        private int namesCount;
         private int pairsCount;
         private int remainingPairsCount;
         private double accuracy;
-        private readonly Random random;
         private readonly IConfirmationDialog confirmationDialog;
+        private bool isBusy;
 
-        protected PickNameViewModel([NotNull] IConfirmationDialog confirmationDialog)
+        public PickNameViewModel([NotNull] IConfirmationDialog confirmationDialog)
         {
             this.confirmationDialog = confirmationDialog ?? throw new ArgumentNullException(nameof(confirmationDialog));
-            random = new Random();
-            PickFirstNameCommand = new Command(async () => await PickFirstNameAsync());
-            PickSecondNameCommand = new Command(async () => await PickSecondNameAsync());
-            RemoveFirstNameCommand = new Command(async () => await RemoveFirstNameAsync());
-            RemoveSecondNameCommand = new Command(async () => await RemoveSecondNameAsync());
-            ResetCommand = new Command(async () => await ResetAsync());
+            PickFirstNameCommand = new Command(async () => await PickFirstNameAsync(), () => !IsBusy);
+            PickSecondNameCommand = new Command(async () => await PickSecondNameAsync(), () => !IsBusy);
+            ResetCommand = new Command(async () => await ResetAsyncWithConfirmation());
+            ShowRankedNamesCommand = new Command(async () => await Shell.Current.GoToAsync(nameof(RankedNamesPage)));
             MessagingCenter.Subscribe<RankedNamesViewModel>(
-                this, "PairsUpdated", sender => Initialize());
-            MessagingCenter.Subscribe<RestoreNameViewModel>(
-                this, "PairsUpdated", sender => Initialize());
+                this, "PairsUpdated", async sender => await InitializeAsync());
         }
 
         public NameModel First
@@ -55,17 +49,6 @@ namespace MenoPreDieta.ViewModels
             {
                 if (Equals(value, second)) return;
                 second = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public int NamesCount
-        {
-            get => namesCount;
-            set
-            {
-                if (value == namesCount) return;
-                namesCount = value;
                 OnPropertyChanged();
             }
         }
@@ -103,91 +86,88 @@ namespace MenoPreDieta.ViewModels
             }
         }
 
+        public bool IsBusy
+        {
+            get => isBusy;
+            set
+            {
+                if (value == isBusy) return;
+                isBusy = value;
+                OnPropertyChanged();
+                PickFirstNameCommand.ChangeCanExecute();
+                PickSecondNameCommand.ChangeCanExecute();
+            }
+        }
+
         public Command PickFirstNameCommand { get; }
 
         public Command PickSecondNameCommand { get; }
 
-        public Command RemoveFirstNameCommand { get; }
-
-        public Command RemoveSecondNameCommand { get; }
-
         public Command ResetCommand { get; }
 
-        public abstract Command ShowRankedNamesCommand { get; }
+        public Command ShowRankedNamesCommand { get; }
 
-        public abstract Command RestoreCommand { get; }
-
-        public void Initialize()
+        public async Task InitializeAsync()
         {
-            NamesCount = App.Names.Catalog.Count;
+            await App.Names.InitializePicksAsync();
             Update();
         }
 
-        private async Task PickFirstNameAsync() => 
-            await PickNameAsync(App.Names.Pairs.Selected.FirstNameId);
+        private async Task PickFirstNameAsync()
+        {
+            if (IsBusy) return;
+            try
+            {
+                IsBusy = true;
+                await PickNameAsync(App.Names.Picks.Selected.FirstNameId);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
 
-        private async Task PickSecondNameAsync() => 
-            await PickNameAsync(App.Names.Pairs.Selected.SecondNameId);
+        private async Task PickSecondNameAsync()
+        {
+            if (IsBusy) return;
+            try
+            {
+                IsBusy = true;
+                await PickNameAsync(App.Names.Picks.Selected.SecondNameId);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
 
         private async Task PickNameAsync(int nameId)
         {
-            if (App.Names.Pairs.Selected != null)
+            if (App.Names.Picks.Selected != null)
             {
-                App.Names.Pairs.Selected.PickedNameId = nameId;
-                App.Names.Pairs.Selected.IsNamePicked = true;
-                App.Names.Update(App.Names.Pairs.Selected);
+                App.Names.Picks.Selected.PickedNameId = nameId;
+                App.Names.Picks.Selected.IsProcessed = true;
+                App.Names.Update(App.Names.Picks.Selected);
                 Update();
                 await App.Names.ProcessUpdateQueueAsync();
             }
         }
 
-        private async Task RemoveFirstNameAsync()
-        {
-            if (First == null) return;
-            var nameId = First.Id;
-            First = null;
-            await RemoveNameAsync(nameId);
-        }
-
-        private async Task RemoveSecondNameAsync()
-        {
-            if (Second == null) return;
-            var nameId = Second.Id;
-            Second = null;
-            await RemoveNameAsync(nameId);
-        }
-
-        private async Task RemoveNameAsync(int nameId)
-        {
-            var pairsToRemove = App.Names.Pairs.With(nameId);
-            pairsToRemove.ForEach(item =>
-            {
-                App.Names.Delete(item);
-            });
-            Update();
-            await App.Names.ProcessDeleteQueueAsync();
-            MessagingCenter.Send(this, "NameDeleted");
-        }
-
         private void Update()
         {
-            var notPickedNamePairs = App.Names.Pairs.NotPicked();
-            App.Names.DeleteQueue.ForEach(item => notPickedNamePairs.Remove(item));
-            App.Names.UpdateQueue.ForEach(item => notPickedNamePairs.Remove(item));
-            if (notPickedNamePairs.Any())
+            if (App.Names.Picks.NotProcessed.Any())
             {
-                var pairsToPick = new List<INamePickEntity>();
-                if (First == null && Second != null)
-                {
-                    pairsToPick = notPickedNamePairs.Where(pair => pair.SecondNameId == Second.Id).ToList();
-                }
-                if (First != null && Second == null)
-                {
-                    pairsToPick = notPickedNamePairs.Where(pair => pair.FirstNameId == First.Id).ToList();
-                }
-
-                var pairs = pairsToPick.Any() ? pairsToPick : notPickedNamePairs;
-                App.Names.Pairs.Selected = pairs.RandomItem();
+                App.Names.Picks.Selected = App.Names.Picks.NotProcessed.RandomItem();
                 UpdateFirstAndSecondName();
             }
             else
@@ -200,26 +180,44 @@ namespace MenoPreDieta.ViewModels
 
         private void UpdateFirstAndSecondName()
         {
-            First = App.Names.Catalog.NameWithId(App.Names.Pairs.Selected.FirstNameId).ToNameModel();
-            Second = App.Names.Catalog.NameWithId(App.Names.Pairs.Selected.SecondNameId).ToNameModel();
+            First = App.Names.Catalog.NameWithId(App.Names.Picks.Selected.FirstNameId).ToNameModel();
+            Second = App.Names.Catalog.NameWithId(App.Names.Picks.Selected.SecondNameId).ToNameModel();
         }
 
         private void UpdateStats()
         {
-            PairsCount = App.Names.Pairs.Count;
-            RemainingPairsCount = App.Names.Pairs.NotPicked().Count;
+            PairsCount = App.Names.Picks.Count;
+            RemainingPairsCount = App.Names.Picks.NotProcessed.Count;
             Accuracy = PairsCount > 0 ? 1 - (double) RemainingPairsCount / PairsCount : 0;
         }
 
-        private INamePickEntity GetRandomNamePick(IReadOnlyList<INamePickEntity> list) => 
-            list[random.Next(list.Count - 1)];
-
-        protected async Task ResetAsync()
+        private async Task ResetAsyncWithConfirmation()
         {
-            if (await confirmationDialog.ShowDialog())
+            try
             {
-                await App.Names.ResetPairsAsync();
-                Initialize();
+                if (await confirmationDialog.ShowDialog())
+                {
+                    await ResetAsync();
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        private async Task ResetAsync()
+        {
+            try
+            {
+                IsBusy = true;
+                await App.Names.ResetPicksAsync();
+                await InitializeAsync();
+            }
+            finally
+            {
+                IsBusy = false;
             }
         }
     }

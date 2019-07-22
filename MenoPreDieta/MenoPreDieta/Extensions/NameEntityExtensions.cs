@@ -5,6 +5,6 @@ namespace MenoPreDieta.Extensions
 {
     public static class NameEntityExtensions
     {
-        public static NameModel ToNameModel(this INameEntity entity) => new NameModel(entity.Id, entity.Value);
+        public static NameModel ToNameModel(this NameEntity entity) => new NameModel(entity.Id, entity.Value);
     }
 }

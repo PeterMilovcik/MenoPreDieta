@@ -12,11 +12,4 @@
             </ShellContent>
         </Tab>
     </FlyoutItem>
-    <FlyoutItem Title="TEST">
-        <Tab>
-            <ShellContent>
-                <views:VoteNamePage />
-            </ShellContent>
-        </Tab>
-    </FlyoutItem>
 </Shell>

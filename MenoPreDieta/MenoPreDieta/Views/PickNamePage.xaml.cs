@@ -1,26 +1,25 @@
 ﻿using MenoPreDieta.Dialogs;
 using MenoPreDieta.ViewModels;
-using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 namespace MenoPreDieta.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class RankedGirlNamesPage : ContentPage
+    public partial class PickNamePage
     {
-        private readonly RankedNamesViewModel viewModel;
+        private readonly PickNameViewModel viewModel;
 
-        public RankedGirlNamesPage()
+        public PickNamePage()
         {
             InitializeComponent();
-            viewModel = new RankedNamesViewModel(new ConfirmationDialog(this));
+            viewModel = new PickNameViewModel(new ConfirmationDialog());
             BindingContext = viewModel;
         }
 
-        protected override void OnAppearing()
+        protected override async void OnAppearing()
         {
             base.OnAppearing();
-            viewModel.Initialize();
+            await viewModel.InitializeAsync();
         }
     }
 }

@@ -12,58 +12,35 @@ namespace MenoPreDieta.Data
         public Database(string dbPath)
         {
             database = new SQLiteAsyncConnection(dbPath);
-            database.CreateTableAsync<BoyNameEntity>().Wait();
-            database.CreateTableAsync<GirlNameEntity>().Wait();
-            database.CreateTableAsync<BoyNamePickEntity>().Wait();
-            database.CreateTableAsync<GirlNamePickEntity>().Wait();
+            database.CreateTableAsync<NameEntity>().Wait();
+            database.CreateTableAsync<PickEntity>().Wait();
         }
 
-        public Task<List<BoyNameEntity>> GetBoyNamesAsync() => 
-            database.Table<BoyNameEntity>().ToListAsync();
+        public Task<List<NameEntity>> GetNamesAsync() => 
+            database.Table<NameEntity>().ToListAsync();
+        public Task<List<PickEntity>> GetPicksAsync() => 
+            database.Table<PickEntity>().ToListAsync();
 
-        public Task<List<GirlNameEntity>> GetGirlNamesAsync() =>
-            database.Table<GirlNameEntity>().ToListAsync();
-
-        public Task<int> InsertBoyNamesAsync(IEnumerable<BoyNameEntity> names) => 
+        public Task<int> AddNamesAsync(IEnumerable<NameEntity> names) => 
             database.InsertAllAsync(names);
+        public Task<int> AddPicksAsync(IEnumerable<PickEntity> picks) =>
+            database.InsertAllAsync(picks);
 
-        public Task<int> InsertGirlNamesAsync(IEnumerable<GirlNameEntity> names) =>
-            database.InsertAllAsync(names);
+        public Task<int> UpdateNameAsync(NameEntity name) => 
+            database.UpdateAsync(name);
+        public Task<int> UpdatePickAsync(PickEntity pick) => 
+            database.UpdateAsync(pick);
 
-        public Task<List<BoyNamePickEntity>> GetBoyNamePicksAsync() =>
-            database.Table<BoyNamePickEntity>().ToListAsync();
+        public Task<int> DeleteNameAsync(NameEntity name) => 
+            database.DeleteAsync(name);
+        public Task<int> DeletePickAsync(PickEntity pick) => 
+            database.DeleteAsync(pick);
 
-        public Task<List<GirlNamePickEntity>> GetGirlNamePicksAsync() =>
-            database.Table<GirlNamePickEntity>().ToListAsync();
-
-        public Task<int> InsertBoyNamePicksAsync(IEnumerable<BoyNamePickEntity> namePicks) =>
-            database.InsertAllAsync(namePicks);
-
-        public Task<int> InsertGirlNamePicksAsync(IEnumerable<GirlNamePickEntity> namePicks) =>
-            database.InsertAllAsync(namePicks);
-
-        public Task<int> UpdateBoyNamePickAsync(BoyNamePickEntity namePick) =>
-            database.UpdateAsync(namePick);
-
-        public Task<int> UpdateGirlNamePickAsync(GirlNamePickEntity namePick) =>
-            database.UpdateAsync(namePick);
-
-        public Task<int> DeleteBoyNamePickAsync(BoyNamePickEntity namePick) => 
-            database.DeleteAsync(namePick);
-
-        public Task<int> DeleteGirlNamePickAsync(GirlNamePickEntity namePick) =>
-            database.DeleteAsync(namePick);
-
-        public async Task RecreateBoyNamesTableAsync()
-        {
-            await database.DropTableAsync<BoyNamePickEntity>();
-            await database.CreateTableAsync<BoyNamePickEntity>();
-        }
-
-        public async Task RecreateGirlNamesTableAsync()
-        {
-            await database.DropTableAsync<GirlNamePickEntity>();
-            await database.CreateTableAsync<GirlNamePickEntity>();
-        }
+        public Task ResetNamesAsync() =>
+            database.DropTableAsync<NameEntity>()
+                .ContinueWith(task => database.CreateTableAsync<NameEntity>());
+        public Task ResetPicksAsync() =>
+            database.DropTableAsync<PickEntity>()
+                .ContinueWith(task => database.CreateTableAsync<PickEntity>());
     }
 }

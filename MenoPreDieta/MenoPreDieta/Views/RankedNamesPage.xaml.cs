@@ -1,18 +1,19 @@
-﻿using MenoPreDieta.ViewModels;
+﻿using MenoPreDieta.Dialogs;
+using MenoPreDieta.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 namespace MenoPreDieta.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class RestoreBoyNamePage : ContentPage
+    public partial class RankedNamesPage : ContentPage
     {
-        private readonly RestoreNameViewModel viewModel;
+        private readonly RankedNamesViewModel viewModel;
 
-        public RestoreBoyNamePage()
+        public RankedNamesPage()
         {
             InitializeComponent();
-            viewModel = new RestoreNameViewModel();
+            viewModel = new RankedNamesViewModel(new ConfirmationDialog());
             BindingContext = viewModel;
         }
 

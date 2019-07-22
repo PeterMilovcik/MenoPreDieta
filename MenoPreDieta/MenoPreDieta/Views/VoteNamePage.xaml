@@ -3,8 +3,12 @@
     x:Class="MenoPreDieta.Views.VoteNamePage"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    Title="Páči sa ti toto meno?"
+    xmlns:viewModels="clr-namespace:MenoPreDieta.ViewModels;assembly=MenoPreDieta"
+    Title="1. kolo: Páči sa ti toto meno?"
     Shell.BackgroundColor="{DynamicResource PrimaryDark}">
+    <ContentPage.BindingContext>
+        <viewModels:VoteNameViewModel />
+    </ContentPage.BindingContext>
     <ContentPage.Content>
         <Grid>
             <Grid.ColumnDefinitions>
@@ -12,29 +16,38 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <Button
+
+            <ImageButton
+                Grid.Row="0"
                 Grid.Column="0"
-                Margin="20"
-                Padding="20,0"
                 BackgroundColor="{DynamicResource RedLight}"
-                CornerRadius="24"
-                Text="Nie" />
+                Command="{Binding NoCommand}"
+                Source="ic_thumb_down_dark.png" />
+
             <Label
                 Grid.Column="1"
                 Margin="0,20"
-                FontSize="Title"
+                FontSize="42"
                 HorizontalOptions="Fill"
                 HorizontalTextAlignment="Center"
-                Text="Meno"
+                Text="{Binding Name.Value}"
                 VerticalOptions="Fill"
                 VerticalTextAlignment="Center" />
-            <Button
+
+            <ImageButton
                 Grid.Column="2"
-                Margin="20"
-                Padding="20,0"
                 BackgroundColor="{DynamicResource GreenLight}"
-                CornerRadius="24"
-                Text="Áno" />
+                Command="{Binding YesCommand}"
+                Source="ic_thumb_up_dark.png" />
+
+            <ProgressBar
+                Grid.Column="0"
+                Grid.ColumnSpan="3"
+                Progress="{Binding Percent}"
+                ProgressColor="{DynamicResource PrimaryDark}"
+                ScaleY="4"
+                VerticalOptions="End" />
+
         </Grid>
     </ContentPage.Content>
 </ContentPage>

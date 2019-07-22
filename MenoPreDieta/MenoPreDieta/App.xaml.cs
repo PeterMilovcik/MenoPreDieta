@@ -1,14 +1,10 @@
-﻿using System;
-using System.IO;
-using MenoPreDieta.Core;
-using MenoPreDieta.Data;
+﻿using MenoPreDieta.Core;
 using Xamarin.Forms;
 
 namespace MenoPreDieta
 {
     public partial class App : Application
     {
-        private static Database database;
         private static Names boyNames;
         private static Names girlNames;
 
@@ -20,13 +16,7 @@ namespace MenoPreDieta
         }
 
         public static Names Names { get; private set; }
-
-        public static Database Database =>
-            database ?? (database =
-                new Database(Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                    "database.db3")));
-
+        
         public static void PickBoyName()
         {
             Current.Resources["Primary"] = Current.Resources["BlueLight"];

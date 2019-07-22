@@ -51,7 +51,7 @@ namespace MenoPreDieta.ViewModels
             try
             {
                 IsBusy = true;
-                var namePicks = App.Names.Pairs.Picked();
+                var namePicks = App.Names.Picks.Processed;
                 var groupedNamePicks = namePicks.GroupBy(gnp => gnp.PickedNameId);
                 var orderedGroupedNamePicks = groupedNamePicks.OrderByDescending(gnp => gnp.Count());
                 Items = new ObservableCollection<Model>();
@@ -71,11 +71,19 @@ namespace MenoPreDieta.ViewModels
 
         protected async Task ResetAsync()
         {
-            if (await ConfirmationDialog.ShowDialog())
+            try
             {
-                await App.Names.ResetPairsAsync();
-                await Shell.Current.Navigation.PopAsync();
-                MessagingCenter.Send(this, "PairsUpdated");
+                if (await ConfirmationDialog.ShowDialog())
+                {
+                    await App.Names.ResetPicksAsync();
+                    await Shell.Current.Navigation.PopAsync();
+                    MessagingCenter.Send(this, "PairsUpdated");
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
             }
         }
 

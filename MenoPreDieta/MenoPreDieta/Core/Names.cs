@@ -1,120 +1,119 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using MenoPreDieta.Data;
 using MenoPreDieta.Entities;
 
 namespace MenoPreDieta.Core
 {
     public abstract class Names
     {
-        protected Names()
+        protected Names(Database database)
         {
+            Database = database;
             Catalog = new NameCatalog();
-            Pairs = new Pairs();
-            UpdateQueue = new List<INamePickEntity>();
-            DeleteQueue = new List<INamePickEntity>();
+            Picks = new Picks();
+            UpdateQueue = new List<PickEntity>();
         }
+
+        protected Database Database { get; }
 
         public NameCatalog Catalog { get; }
 
-        public Pairs Pairs { get; }
+        public Picks Picks { get; }
 
-        public List<INamePickEntity> UpdateQueue { get; }
+        public List<PickEntity> UpdateQueue { get; }
 
-        public List<INamePickEntity> DeleteQueue { get; }
+        public List<NameEntity> Processed => 
+            Catalog.Where(name => name.IsProcessed).ToList();
+
+        public List<NameEntity> NotProcessed =>
+            Catalog.Where(name => !name.IsProcessed).ToList();
 
         public virtual async Task InitializeAsync()
         {
             await InitializeCatalogAsync();
-            await InitializePairsAsync();
+            //await InitializePicksAsync();
         }
 
-        public void Update(INamePickEntity pair) => UpdateQueue.Add(pair);
-
-        public void Delete(INamePickEntity pair)
-        {
-            App.Names.Pairs.Remove(pair);
-            DeleteQueue.Add(pair);
-        }
+        public void Update(PickEntity pick) => UpdateQueue.Add(pick);
 
         public async Task ProcessUpdateQueueAsync()
         {
             if (UpdateQueue.Any())
             {
-                var item = UpdateQueue.First();
-                await UpdateDatabaseAsync(item);
-                UpdateQueue.Remove(item);
+                var pick = UpdateQueue.First();
+                await Database.UpdatePickAsync(pick);
+                UpdateQueue.Remove(pick);
                 await ProcessUpdateQueueAsync();
-            }
-        }
-
-        public async Task ProcessDeleteQueueAsync()
-        {
-            if (DeleteQueue.Any())
-            {
-                var item = DeleteQueue.First();
-                await DeleteFromDatabaseAsync(item);
-                DeleteQueue.Remove(item);
-                await ProcessDeleteQueueAsync();
             }
         }
 
         private async Task InitializeCatalogAsync()
         {
             Catalog.Clear();
-            Catalog.AddRange(await GetNamesFromDatabase());
+            Catalog.AddRange(await Database.GetNamesAsync());
             if (!Catalog.Any())
             {
                 await AddNamesToDatabase();
-                Catalog.AddRange(await GetNamesFromDatabase());
+                Catalog.AddRange(await Database.GetNamesAsync());
             }
         }
 
-        protected async Task InitializePairsAsync()
+        public async Task InitializePicksAsync()
         {
-            Pairs.Clear();
-            Pairs.AddRange(await GetPairsFromDatabase());
-            if (!Pairs.Any())
+            Picks.Clear();
+            Picks.AddRange(await Database.GetPicksAsync());
+            if (!Picks.Any())
             {
-                await App.Names.CreatePairsAsync();
+                await App.Names.CreatePicksAsync();
             }
         }
 
-        private async Task CreatePairsAsync()
+        private async Task CreatePicksAsync()
         {
-            for (int i = 0; i < Catalog.Count; i++)
+            var entities = Processed.Where(name => name.IsLiked).ToList();
+            for (int i = 0; i < entities.Count; i++)
             {
-                for (int j = i + 1; j < Catalog.Count; j++)
+                for (int j = i + 1; j < entities.Count; j++)
                 {
-                    var firstName = Catalog[i];
-                    var secondName = Catalog[j];
-                    var pair = App.Names.CreatePair(firstName.Id, secondName.Id);
-                    if (pair != null) Pairs.Add(pair);
+                    var firstName = entities[i];
+                    var secondName = entities[j];
+                    var pick = App.Names.CreatePick(firstName.Id, secondName.Id);
+                    Picks.Add(pick);
                 }
             }
-            await AddToDatabase(Pairs);
+
+            if (Picks.Any())
+            {
+                await Database.AddPicksAsync(Picks);
+            }
         }
 
         protected abstract Task<int> AddNamesToDatabase();
 
-        protected abstract Task<List<INameEntity>> GetNamesFromDatabase();
+        protected static string DbPath(string fileName) =>
+            Path.Combine(
+                Environment.GetFolderPath(
+                    Environment.SpecialFolder.LocalApplicationData), fileName);
 
-        protected abstract Task<List<INamePickEntity>> GetPairsFromDatabase();
+        public virtual PickEntity CreatePick(int firstId, int secondId) =>
+            new PickEntity { FirstNameId = firstId, SecondNameId = secondId };
 
-        public abstract INamePickEntity CreatePair(int firstId, int secondId);
-
-        public abstract Task<int> AddToDatabase(List<INamePickEntity> pairs);
-
-        public abstract Task ResetPairsAsync();
-
-        public abstract Task<int> UpdateDatabaseAsync(INamePickEntity pair);
-
-        public abstract Task<int> DeleteFromDatabaseAsync(INamePickEntity pair);
-
-        public IEnumerable<INameEntity> Removed()
+        public virtual async Task ResetPicksAsync()
         {
-            var notRemovedNameIds = App.Names.Pairs.NameIds();
-            return App.Names.Catalog.Where(name => !notRemovedNameIds.Contains(name.Id));
+            var dropNamesTask = Database.ResetNamesAsync();
+            var dropPicksTask = Database.ResetPicksAsync();
+            await Task.WhenAll(dropNamesTask, dropPicksTask);
+            await InitializeAsync();
+        }
+
+        public async Task<int> ProcessAsync(NameEntity name)
+        {
+            name.IsProcessed = true;
+            return await Database.UpdateNameAsync(name);
         }
     }
 }

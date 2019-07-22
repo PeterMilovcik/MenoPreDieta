@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using MenoPreDieta.Data;
 using MenoPreDieta.Entities;
 
@@ -8,31 +6,13 @@ namespace MenoPreDieta.Core
 {
     public class GirlNames : Names
     {
-        protected override async Task<List<INameEntity>> GetNamesFromDatabase() => 
-            (await App.Database.GetGirlNamesAsync()).OfType<INameEntity>().ToList();
-
-        protected override async Task<List<INamePickEntity>> GetPairsFromDatabase() =>
-            (await App.Database.GetGirlNamePicksAsync()).OfType<INamePickEntity>().ToList();
-
-        public override INamePickEntity CreatePair(int firstId, int secondId) => 
-            new GirlNamePickEntity { FirstNameId = firstId, SecondNameId = secondId };
-
-        public override Task<int> AddToDatabase(List<INamePickEntity> pairs) => 
-            App.Database.InsertGirlNamePicksAsync(pairs.OfType<GirlNamePickEntity>());
-
-        public override async Task ResetPairsAsync()
+        public GirlNames() : base(new Database(DbPath("girls.db3")))
         {
-            await App.Database.RecreateGirlNamesTableAsync();
-            await InitializePairsAsync();
         }
 
-        protected override Task<int> AddNamesToDatabase() =>
-            App.Database.InsertGirlNamesAsync(new GirlNamesCatalog());
+        public override PickEntity CreatePick(int firstId, int secondId) => 
+            new PickEntity { FirstNameId = firstId, SecondNameId = secondId };
 
-        public override Task<int> UpdateDatabaseAsync(INamePickEntity pair) =>
-            App.Database.UpdateGirlNamePickAsync(pair as GirlNamePickEntity);
-
-        public override Task<int> DeleteFromDatabaseAsync(INamePickEntity pair) =>
-            App.Database.DeleteGirlNamePickAsync(pair as GirlNamePickEntity);
+        protected override Task<int> AddNamesToDatabase() => Database.AddNamesAsync(new GirlNamesCatalog());
     }
 }

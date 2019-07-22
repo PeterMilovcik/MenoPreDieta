@@ -1,4 +1,6 @@
-﻿using MenoPreDieta.Views;
+﻿using System.Linq;
+using MenoPreDieta.Dialogs;
+using MenoPreDieta.Views;
 using Xamarin.Forms;
 
 namespace MenoPreDieta.ViewModels
@@ -11,13 +13,27 @@ namespace MenoPreDieta.ViewModels
                 async () =>
                 {
                     App.PickBoyName();
-                    await Shell.Current.GoToAsync(nameof(PickBoyNamePage));
+                    if (App.Names.NotProcessed.Any())
+                    {
+                        await Shell.Current.GoToAsync(nameof(VoteNamePage));
+                    }
+                    else
+                    {
+                        await Shell.Current.GoToAsync(nameof(PickNamePage));
+                    }
                 });
             PickGirlNameCommand = new Command(
                 async () =>
                 {
                     App.PickGirlName();
-                    await Shell.Current.GoToAsync(nameof(PickGirlNamePage));
+                    if (App.Names.NotProcessed.Any())
+                    {
+                        await Shell.Current.GoToAsync(nameof(VoteNamePage));
+                    }
+                    else
+                    {
+                        await Shell.Current.GoToAsync(nameof(PickNamePage));
+                    }
                 });
         }
 

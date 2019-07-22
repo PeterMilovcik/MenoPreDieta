@@ -28,6 +28,18 @@
 
             <Color x:Key="BrownLight">#a1887f</Color>
             <Color x:Key="Brown">#795548</Color>
+
+            <x:Double x:Key="ButtonSize">80</x:Double>
+            <x:Int32 x:Key="ButtonCornerRadius">40</x:Int32>
+            <Style TargetType="ImageButton">
+                <Setter Property="Margin" Value="20" />
+                <Setter Property="Padding" Value="15" />
+                <Setter Property="CornerRadius" Value="{StaticResource ButtonCornerRadius}" />
+                <Setter Property="WidthRequest" Value="{StaticResource ButtonSize}" />
+                <Setter Property="HeightRequest" Value="{StaticResource ButtonSize}" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

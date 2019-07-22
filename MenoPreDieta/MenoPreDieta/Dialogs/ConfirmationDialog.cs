@@ -1,19 +1,13 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace MenoPreDieta.Dialogs
 {
     public class ConfirmationDialog : IConfirmationDialog
     {
-        private readonly Page page;
-
-        public ConfirmationDialog(Page page)
-        {
-            this.page = page;
-        }
-
         public async Task<bool> ShowDialog() => 
-            await page.DisplayAlert(
+            await Shell.Current.Navigation.NavigationStack.Last().DisplayAlert(
                 "Otázka", 
                 "Naozaj chcete začať odznova?", 
                 "Áno", 
