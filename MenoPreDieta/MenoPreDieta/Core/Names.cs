@@ -102,7 +102,7 @@ namespace MenoPreDieta.Core
         public virtual PickEntity CreatePick(int firstId, int secondId) =>
             new PickEntity { FirstNameId = firstId, SecondNameId = secondId };
 
-        public virtual async Task ResetPicksAsync()
+        public virtual async Task ResetAsync()
         {
             var dropNamesTask = Database.ResetNamesAsync();
             var dropPicksTask = Database.ResetPicksAsync();

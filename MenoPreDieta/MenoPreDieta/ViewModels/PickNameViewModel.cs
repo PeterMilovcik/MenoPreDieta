@@ -16,7 +16,7 @@ namespace MenoPreDieta.ViewModels
         private NameModel second;
         private int pairsCount;
         private int remainingPairsCount;
-        private double accuracy;
+        private double progress;
         private readonly IConfirmationDialog confirmationDialog;
         private bool isBusy;
 
@@ -25,7 +25,10 @@ namespace MenoPreDieta.ViewModels
             this.confirmationDialog = confirmationDialog ?? throw new ArgumentNullException(nameof(confirmationDialog));
             PickFirstNameCommand = new Command(async () => await PickFirstNameAsync(), () => !IsBusy);
             PickSecondNameCommand = new Command(async () => await PickSecondNameAsync(), () => !IsBusy);
-            ResetCommand = new Command(async () => await ResetAsyncWithConfirmation());
+            ResetCommand = new Command(async () =>
+            {
+                await ResetAsyncWithConfirmation();
+            });
             ShowRankedNamesCommand = new Command(async () => await Shell.Current.GoToAsync(nameof(RankedNamesPage)));
             MessagingCenter.Subscribe<RankedNamesViewModel>(
                 this, "PairsUpdated", async sender => await InitializeAsync());
@@ -75,13 +78,13 @@ namespace MenoPreDieta.ViewModels
             }
         }
 
-        public double Accuracy
+        public double Progress
         {
-            get => accuracy;
+            get => progress;
             set
             {
-                if (value.Equals(accuracy)) return;
-                accuracy = value;
+                if (value.Equals(progress)) return;
+                progress = value;
                 OnPropertyChanged();
             }
         }
@@ -115,10 +118,8 @@ namespace MenoPreDieta.ViewModels
 
         private async Task PickFirstNameAsync()
         {
-            if (IsBusy) return;
             try
             {
-                IsBusy = true;
                 await PickNameAsync(App.Names.Picks.Selected.FirstNameId);
             }
             catch (Exception e)
@@ -126,28 +127,18 @@ namespace MenoPreDieta.ViewModels
                 Console.WriteLine(e);
                 throw;
             }
-            finally
-            {
-                IsBusy = false;
-            }
         }
 
         private async Task PickSecondNameAsync()
         {
-            if (IsBusy) return;
             try
             {
-                IsBusy = true;
                 await PickNameAsync(App.Names.Picks.Selected.SecondNameId);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
                 throw;
-            }
-            finally
-            {
-                IsBusy = false;
             }
         }
 
@@ -188,7 +179,7 @@ namespace MenoPreDieta.ViewModels
         {
             PairsCount = App.Names.Picks.Count;
             RemainingPairsCount = App.Names.Picks.NotProcessed.Count;
-            Accuracy = PairsCount > 0 ? 1 - (double) RemainingPairsCount / PairsCount : 0;
+            Progress = PairsCount > 0 ? 1 - (double) RemainingPairsCount / PairsCount : 0;
         }
 
         private async Task ResetAsyncWithConfirmation()
@@ -198,6 +189,7 @@ namespace MenoPreDieta.ViewModels
                 if (await confirmationDialog.ShowDialog())
                 {
                     await ResetAsync();
+                    await Shell.Current.Navigation.PopToRootAsync();
                 }
             }
             catch (Exception e)
@@ -212,7 +204,7 @@ namespace MenoPreDieta.ViewModels
             try
             {
                 IsBusy = true;
-                await App.Names.ResetPicksAsync();
+                await App.Names.ResetAsync();
                 await InitializeAsync();
             }
             finally

@@ -43,7 +43,7 @@
             <ProgressBar
                 Grid.Column="0"
                 Grid.ColumnSpan="3"
-                Progress="{Binding Percent}"
+                Progress="{Binding Progress}"
                 ProgressColor="{DynamicResource PrimaryDark}"
                 ScaleY="4"
                 VerticalOptions="End" />

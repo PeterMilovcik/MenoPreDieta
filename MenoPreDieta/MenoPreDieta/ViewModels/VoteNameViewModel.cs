@@ -13,7 +13,7 @@ namespace MenoPreDieta.ViewModels
     {
         private NameEntity name;
         private List<NameEntity> notProcessedNames;
-        private double percent;
+        private double progress;
 
         public VoteNameViewModel()
         { 
@@ -36,13 +36,13 @@ namespace MenoPreDieta.ViewModels
             }
         }
 
-        public double Percent
+        public double Progress
         {
-            get => percent;
+            get => progress;
             set
             {
-                if (value.Equals(percent)) return;
-                percent = value;
+                if (value.Equals(progress)) return;
+                progress = value;
                 OnPropertyChanged();
             }
         }
@@ -61,11 +61,11 @@ namespace MenoPreDieta.ViewModels
             var notProcessedCount = notProcessedNames.Count;
             if (totalCount > 0)
             {
-                Percent = (totalCount - notProcessedCount) / (double)totalCount;
+                Progress = (totalCount - notProcessedCount) / (double)totalCount;
             }
             else
             {
-                Percent = 0;
+                Progress = 0;
             }
         }
 

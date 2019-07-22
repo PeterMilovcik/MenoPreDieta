@@ -23,12 +23,14 @@
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
             <Label
                 Grid.Row="0"
+                Grid.RowSpan="2"
                 Grid.Column="0"
-                Margin="0,0,0,40"
                 FontSize="42"
                 HorizontalOptions="Fill"
                 HorizontalTextAlignment="Center"
@@ -38,8 +40,8 @@
 
             <Label
                 Grid.Row="0"
+                Grid.RowSpan="2"
                 Grid.Column="1"
-                Margin="0,0,0,40"
                 FontSize="42"
                 HorizontalOptions="Fill"
                 HorizontalTextAlignment="Center"
@@ -49,6 +51,7 @@
 
             <ImageButton
                 Grid.Row="0"
+                Grid.RowSpan="3"
                 Grid.Column="0"
                 Margin="20,30"
                 BackgroundColor="{DynamicResource GreenLight}"
@@ -59,6 +62,7 @@
 
             <ImageButton
                 Grid.Row="0"
+                Grid.RowSpan="3"
                 Grid.Column="1"
                 Margin="20,30"
                 BackgroundColor="{DynamicResource GreenLight}"
@@ -68,17 +72,18 @@
                 VerticalOptions="End" />
 
             <ProgressBar
-                Grid.Row="0"
+                Grid.Row="2"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
                 HorizontalOptions="FillAndExpand"
-                Progress="{Binding Accuracy}"
+                Progress="{Binding Progress}"
                 ProgressColor="{DynamicResource PrimaryDark}"
                 ScaleY="4"
                 VerticalOptions="End" />
 
             <ActivityIndicator
                 Grid.Row="0"
+                Grid.RowSpan="3"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
                 HeightRequest="70"

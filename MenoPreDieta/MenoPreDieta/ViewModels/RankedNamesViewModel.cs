@@ -20,7 +20,7 @@ namespace MenoPreDieta.ViewModels
             ResetCommand = new Command(
                 async () =>
                 {
-                    await ResetAsync();
+                    await ResetAsyncWithConfirmation();
                 });
         }
 
@@ -69,21 +69,34 @@ namespace MenoPreDieta.ViewModels
 
         public Command ResetCommand { get; }
 
-        protected async Task ResetAsync()
+        private async Task ResetAsyncWithConfirmation()
         {
             try
             {
                 if (await ConfirmationDialog.ShowDialog())
                 {
-                    await App.Names.ResetPicksAsync();
-                    await Shell.Current.Navigation.PopAsync();
-                    MessagingCenter.Send(this, "PairsUpdated");
+                    await ResetAsync();
                 }
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
                 throw;
+            }
+        }
+
+        private async Task ResetAsync()
+        {
+            try
+            {
+                IsBusy = true;
+                await App.Names.ResetAsync();
+                MessagingCenter.Send(this, "PairsUpdated");
+                await Shell.Current.Navigation.PopToRootAsync();
+            }
+            finally
+            {
+                IsBusy = false;
             }
         }
 
