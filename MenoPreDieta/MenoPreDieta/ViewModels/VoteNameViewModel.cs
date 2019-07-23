@@ -17,7 +17,7 @@ namespace MenoPreDieta.ViewModels
         private double progress;
         private readonly IConfirmationDialog confirmationDialog;
         private bool isBusy;
-        private HashSet<NameEntity> undoQueue;
+        private readonly HashSet<NameEntity> undoQueue;
 
         public VoteNameViewModel(IConfirmationDialog confirmationDialog)
         {

@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MenoPreDieta.Annotations;
 using MenoPreDieta.Dialogs;
+using MenoPreDieta.Entities;
 using MenoPreDieta.Extensions;
 using MenoPreDieta.Models;
 using MenoPreDieta.Views;
@@ -19,9 +21,11 @@ namespace MenoPreDieta.ViewModels
         private double progress;
         private readonly IConfirmationDialog confirmationDialog;
         private bool isBusy;
+        private readonly HashSet<PickEntity> undoQueue;
 
         public PickNameViewModel([NotNull] IConfirmationDialog confirmationDialog)
         {
+            undoQueue = new HashSet<PickEntity>();
             this.confirmationDialog = confirmationDialog ?? throw new ArgumentNullException(nameof(confirmationDialog));
             PickFirstNameCommand = new Command(async () => await PickFirstNameAsync(), () => !IsBusy);
             PickSecondNameCommand = new Command(async () => await PickSecondNameAsync(), () => !IsBusy);
@@ -30,6 +34,7 @@ namespace MenoPreDieta.ViewModels
                 await ResetAsyncWithConfirmation();
             });
             ShowRankedNamesCommand = new Command(async () => await Shell.Current.GoToAsync(nameof(RankedNamesPage)));
+            UndoCommand = new Command(async () => await UndoAsync());
             MessagingCenter.Subscribe<RankedNamesViewModel>(
                 this, "PairsUpdated", async sender => await InitializeAsync());
         }
@@ -110,6 +115,8 @@ namespace MenoPreDieta.ViewModels
 
         public Command ShowRankedNamesCommand { get; }
 
+        public Command UndoCommand { get; }
+
         public async Task InitializeAsync()
         {
             await App.Names.InitializePicksAsync();
@@ -144,11 +151,13 @@ namespace MenoPreDieta.ViewModels
 
         private async Task PickNameAsync(int nameId)
         {
-            if (App.Names.Picks.Selected != null)
+            var selected = App.Names.Picks.Selected;
+            if (selected != null)
             {
-                App.Names.Picks.Selected.PickedNameId = nameId;
-                App.Names.Picks.Selected.IsProcessed = true;
-                await App.Names.UpdateAsync(App.Names.Picks.Selected);
+                selected.PickedNameId = nameId;
+                selected.IsProcessed = true;
+                undoQueue.Add(selected);
+                await App.Names.UpdateAsync(selected);
                 await UpdateAsync();
             }
         }
@@ -191,6 +200,26 @@ namespace MenoPreDieta.ViewModels
                     await ResetAsync();
                     await Shell.Current.Navigation.PopToRootAsync();
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        private async Task UndoAsync()
+        {
+            try
+            {
+                if (undoQueue.Any() == false) return;
+                var last = undoQueue.Last();
+                undoQueue.Remove(last);
+                last.IsProcessed = false;
+                await App.Names.UpdateAsync(last);
+                App.Names.Picks.Selected = last;
+                UpdateFirstAndSecondName();
+                UpdateStats();
             }
             catch (Exception e)
             {
