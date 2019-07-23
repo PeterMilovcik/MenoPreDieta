@@ -9,6 +9,11 @@
     <ContentPage.ToolbarItems>
 
         <ToolbarItem
+            Command="{Binding UndoCommand}"
+            IconImageSource="ic_action_undo.png"
+            Text="Vrátiť naspäť" />
+
+        <ToolbarItem
             Command="{Binding ResetCommand}"
             IconImageSource="ic_reset.png"
             Text="Začať odznova" />

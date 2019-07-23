@@ -92,10 +92,12 @@ namespace MenoPreDieta.Core
             await InitializeAsync();
         }
 
-        public async Task<int> ProcessAsync(NameEntity name)
+        public Task<int> ProcessAsync(NameEntity name)
         {
             name.IsProcessed = true;
-            return await Database.UpdateNameAsync(name);
+            return UpdateAsync(name);
         }
+
+        public Task<int> UpdateAsync(NameEntity name) => Database.UpdateNameAsync(name);
     }
 }

@@ -17,13 +17,16 @@ namespace MenoPreDieta.ViewModels
         private double progress;
         private readonly IConfirmationDialog confirmationDialog;
         private bool isBusy;
+        private HashSet<NameEntity> undoQueue;
 
         public VoteNameViewModel(IConfirmationDialog confirmationDialog)
         {
+            undoQueue = new HashSet<NameEntity>();
             this.confirmationDialog = confirmationDialog;
             YesCommand = new Command(async ()=> await YesAsync());
             NoCommand = new Command(async ()=> await NoAsync());
             ResetCommand = new Command(async () => await ResetWithConfirmationAsync());
+            UndoCommand = new Command(async () => await UndoAsync());
         }
 
         public Command YesCommand { get; }
@@ -31,6 +34,8 @@ namespace MenoPreDieta.ViewModels
         public Command NoCommand { get; }
 
         public Command ResetCommand { get; }
+
+        public Command UndoCommand { get; }
 
         public NameEntity Name
         {
@@ -100,6 +105,7 @@ namespace MenoPreDieta.ViewModels
                 Name.IsLiked = true;
                 await App.Names.ProcessAsync(Name);
                 notProcessedNames.Remove(Name);
+                undoQueue.Add(Name);
                 Name = GetNewName();
                 UpdatePercent();
                 await CheckEmptyNameAsync();
@@ -119,9 +125,30 @@ namespace MenoPreDieta.ViewModels
                 Name.IsLiked = false;
                 await App.Names.ProcessAsync(Name);
                 notProcessedNames.Remove(Name);
+                undoQueue.Add(Name);
                 Name = GetNewName();
                 UpdatePercent();
                 await CheckEmptyNameAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        private async Task UndoAsync()
+        {
+            try
+            {
+                if (undoQueue.Any() == false) return;
+                var last = undoQueue.Last();
+                undoQueue.Remove(last);
+                last.IsProcessed = false;
+                await App.Names.UpdateAsync(last);
+                notProcessedNames.Add(last);
+                Name = last;
+                UpdatePercent();
             }
             catch (Exception e)
             {
