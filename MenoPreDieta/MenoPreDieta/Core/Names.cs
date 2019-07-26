@@ -36,7 +36,8 @@ namespace MenoPreDieta.Core
         private async Task InitializeCatalogAsync()
         {
             Catalog.Clear();
-            Catalog.AddRange(await Database.GetNamesAsync());
+            var names = await Database.GetNamesAsync();
+            Catalog.AddRange(names);
             if (!Catalog.Any())
             {
                 await AddNamesToDatabase();

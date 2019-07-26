@@ -14,6 +14,11 @@
             Text="Vrátiť naspäť" />
 
         <ToolbarItem
+            Command="{Binding HideNameDayCommand}"
+            IconImageSource="ic_calendar.png"
+            Text="Meniny" />
+
+        <ToolbarItem
             Command="{Binding ResetCommand}"
             IconImageSource="ic_reset.png"
             Text="Začať odznova" />
@@ -46,12 +51,38 @@
             <Label
                 Grid.Row="0"
                 Grid.RowSpan="2"
+                Grid.Column="0"
+                Margin="30"
+                FontSize="Medium"
+                HorizontalOptions="Fill"
+                HorizontalTextAlignment="Center"
+                IsVisible="{Binding NameDayVisibility}"
+                Text="{Binding First.NameDay}"
+                VerticalOptions="End"
+                VerticalTextAlignment="Center" />
+
+            <Label
+                Grid.Row="0"
+                Grid.RowSpan="2"
                 Grid.Column="1"
                 FontSize="42"
                 HorizontalOptions="Fill"
                 HorizontalTextAlignment="Center"
                 Text="{Binding Second.Name}"
                 VerticalOptions="Fill"
+                VerticalTextAlignment="Center" />
+
+            <Label
+                Grid.Row="0"
+                Grid.RowSpan="2"
+                Grid.Column="1"
+                Margin="30"
+                FontSize="Medium"
+                HorizontalOptions="Fill"
+                HorizontalTextAlignment="Center"
+                IsVisible="{Binding NameDayVisibility}"
+                Text="{Binding Second.NameDay}"
+                VerticalOptions="End"
                 VerticalTextAlignment="Center" />
 
             <ImageButton

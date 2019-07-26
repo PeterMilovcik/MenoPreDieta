@@ -22,6 +22,7 @@ namespace MenoPreDieta.ViewModels
         private readonly IConfirmationDialog confirmationDialog;
         private bool isBusy;
         private readonly HashSet<PickEntity> undoQueue;
+        private bool nameDayVisibility;
 
         public PickNameViewModel([NotNull] IConfirmationDialog confirmationDialog)
         {
@@ -37,7 +38,22 @@ namespace MenoPreDieta.ViewModels
             UndoCommand = new Command(async () => await UndoAsync());
             MessagingCenter.Subscribe<RankedNamesViewModel>(
                 this, "PairsUpdated", async sender => await InitializeAsync());
+            HideNameDayCommand = new Command(ToggleNameDayVisibility);
+            NameDayVisibility = true;
         }
+
+        public bool NameDayVisibility
+        {
+            get => nameDayVisibility;
+            set
+            {
+                if (value == nameDayVisibility) return;
+                nameDayVisibility = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Command HideNameDayCommand { get; }
 
         public NameModel First
         {
@@ -241,5 +257,7 @@ namespace MenoPreDieta.ViewModels
                 IsBusy = false;
             }
         }
+
+        private void ToggleNameDayVisibility() => NameDayVisibility = !NameDayVisibility;
     }
 }
