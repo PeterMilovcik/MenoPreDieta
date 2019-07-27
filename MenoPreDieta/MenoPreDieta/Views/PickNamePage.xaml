@@ -28,19 +28,21 @@
     <ContentPage.Content>
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <Label
                 Grid.Row="0"
                 Grid.RowSpan="2"
-                Grid.Column="0"
+                Grid.Column="1"
                 FontSize="42"
                 HorizontalOptions="Fill"
                 HorizontalTextAlignment="Center"
@@ -51,8 +53,8 @@
             <Label
                 Grid.Row="0"
                 Grid.RowSpan="2"
-                Grid.Column="0"
-                Margin="30"
+                Grid.Column="1"
+                Margin="5"
                 FontSize="Medium"
                 HorizontalOptions="Fill"
                 HorizontalTextAlignment="Center"
@@ -64,7 +66,7 @@
             <Label
                 Grid.Row="0"
                 Grid.RowSpan="2"
-                Grid.Column="1"
+                Grid.Column="2"
                 FontSize="42"
                 HorizontalOptions="Fill"
                 HorizontalTextAlignment="Center"
@@ -75,8 +77,8 @@
             <Label
                 Grid.Row="0"
                 Grid.RowSpan="2"
-                Grid.Column="1"
-                Margin="30"
+                Grid.Column="2"
+                Margin="5"
                 FontSize="Medium"
                 HorizontalOptions="Fill"
                 HorizontalTextAlignment="Center"
@@ -89,6 +91,7 @@
                 Grid.Row="0"
                 Grid.RowSpan="3"
                 Grid.Column="0"
+                Grid.ColumnSpan="2"
                 Margin="20,30"
                 BackgroundColor="{DynamicResource GreenLight}"
                 Command="{Binding PickFirstNameCommand}"
@@ -99,7 +102,8 @@
             <ImageButton
                 Grid.Row="0"
                 Grid.RowSpan="3"
-                Grid.Column="1"
+                Grid.Column="2"
+                Grid.ColumnSpan="2"
                 Margin="20,30"
                 BackgroundColor="{DynamicResource GreenLight}"
                 Command="{Binding PickSecondNameCommand}"
@@ -107,10 +111,74 @@
                 Source="ic_thumb_up_dark.png"
                 VerticalOptions="End" />
 
+            <ImageButton
+                Grid.Row="0"
+                Grid.RowSpan="3"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Margin="20"
+                Padding="7"
+                BackgroundColor="{StaticResource RedLight}"
+                Command="{Binding RemoveFirstCommand}"
+                CornerRadius="20"
+                HeightRequest="40"
+                HorizontalOptions="Start"
+                Source="ic_thumb_down_dark_left.png"
+                VerticalOptions="Start"
+                WidthRequest="40" />
+
+            <ImageButton
+                Grid.Row="0"
+                Grid.RowSpan="3"
+                Grid.Column="2"
+                Grid.ColumnSpan="2"
+                Margin="20"
+                Padding="7"
+                BackgroundColor="{StaticResource RedLight}"
+                Command="{Binding RemoveSecondCommand}"
+                CornerRadius="20"
+                HeightRequest="40"
+                HorizontalOptions="End"
+                Source="ic_thumb_down_dark.png"
+                VerticalOptions="Start"
+                WidthRequest="40" />
+
+            <ImageButton
+                Grid.Row="0"
+                Grid.RowSpan="3"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Margin="20"
+                Padding="0"
+                BackgroundColor="{DynamicResource Primary}"
+                Command="{Binding ShowDescriptionFirstCommand}"
+                CornerRadius="20"
+                HeightRequest="40"
+                HorizontalOptions="Start"
+                Source="ic_description_gray.png"
+                VerticalOptions="Center"
+                WidthRequest="40" />
+
+            <ImageButton
+                Grid.Row="0"
+                Grid.RowSpan="3"
+                Grid.Column="2"
+                Grid.ColumnSpan="2"
+                Margin="20"
+                Padding="0"
+                BackgroundColor="{DynamicResource Primary}"
+                Command="{Binding ShowDescriptionSecondCommand}"
+                CornerRadius="20"
+                HeightRequest="40"
+                HorizontalOptions="End"
+                Source="ic_description_gray.png"
+                VerticalOptions="Center"
+                WidthRequest="40" />
+
             <ProgressBar
                 Grid.Row="2"
                 Grid.Column="0"
-                Grid.ColumnSpan="2"
+                Grid.ColumnSpan="4"
                 HorizontalOptions="FillAndExpand"
                 Progress="{Binding Progress}"
                 ProgressColor="{DynamicResource PrimaryDark}"
@@ -121,7 +189,7 @@
                 Grid.Row="0"
                 Grid.RowSpan="3"
                 Grid.Column="0"
-                Grid.ColumnSpan="2"
+                Grid.ColumnSpan="4"
                 HeightRequest="70"
                 HorizontalOptions="Center"
                 IsRunning="{Binding IsBusy}"
