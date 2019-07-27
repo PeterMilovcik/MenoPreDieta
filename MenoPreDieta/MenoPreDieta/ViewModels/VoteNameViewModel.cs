@@ -19,6 +19,7 @@ namespace MenoPreDieta.ViewModels
         private bool isBusy;
         private readonly HashSet<NameEntity> undoQueue;
         private bool nameDayVisibility;
+        private bool descriptionVisibility;
 
         public VoteNameViewModel(IConfirmationDialog confirmationDialog)
         {
@@ -29,6 +30,7 @@ namespace MenoPreDieta.ViewModels
             ResetCommand = new Command(async () => await ResetWithConfirmationAsync());
             UndoCommand = new Command(async () => await UndoAsync());
             HideNameDayCommand = new Command(ToggleNameDayVisibility);
+            ShowDescriptionCommand = new Command(ToggleDescriptionVisibility);
             NameDayVisibility = true;
         }
 
@@ -40,6 +42,8 @@ namespace MenoPreDieta.ViewModels
         public Command ResetCommand { get; }
 
         public Command HideNameDayCommand { get; }
+
+        public Command ShowDescriptionCommand { get; }
 
         public Command UndoCommand { get; }
 
@@ -83,6 +87,17 @@ namespace MenoPreDieta.ViewModels
             {
                 if (value == nameDayVisibility) return;
                 nameDayVisibility = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool DescriptionVisibility
+        {
+            get => descriptionVisibility;
+            set
+            {
+                if (value == descriptionVisibility) return;
+                descriptionVisibility = value;
                 OnPropertyChanged();
             }
         }
@@ -214,5 +229,7 @@ namespace MenoPreDieta.ViewModels
         }
 
         private void ToggleNameDayVisibility() => NameDayVisibility = !NameDayVisibility;
+
+        private void ToggleDescriptionVisibility() => DescriptionVisibility = !DescriptionVisibility;
     }
 }

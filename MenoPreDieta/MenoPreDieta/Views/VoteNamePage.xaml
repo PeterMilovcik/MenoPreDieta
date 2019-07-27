@@ -14,6 +14,11 @@
             Text="Vrátiť naspäť" />
 
         <ToolbarItem
+            Command="{Binding ShowDescriptionCommand}"
+            IconImageSource="ic_action_description.png"
+            Text="Význam" />
+
+        <ToolbarItem
             Command="{Binding HideNameDayCommand}"
             IconImageSource="ic_calendar.png"
             Text="Meniny" />
@@ -74,6 +79,27 @@
                 ProgressColor="{DynamicResource PrimaryDark}"
                 ScaleY="4"
                 VerticalOptions="End" />
+
+            <StackLayout
+                Grid.Column="0"
+                Grid.ColumnSpan="3"
+                BackgroundColor="White"
+                HorizontalOptions="Fill"
+                IsVisible="{Binding DescriptionVisibility}"
+                VerticalOptions="Fill">
+                <ScrollView>
+                    <Label
+                        Margin="20"
+                        FontSize="Medium"
+                        HorizontalTextAlignment="Start"
+                        Text="{Binding Name.Description}"
+                        VerticalTextAlignment="Start">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ShowDescriptionCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                </ScrollView>
+            </StackLayout>
 
         </Grid>
     </ContentPage.Content>
