@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MenoPreDieta.Views.NameDescriptionPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="{Binding Name.Value}"
+    Shell.BackgroundColor="{DynamicResource PrimaryDark}">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="{Binding Name.NameDay}" />
+    </ContentPage.ToolbarItems>
+
+    <ContentPage.Content>
+        <StackLayout HorizontalOptions="Fill" VerticalOptions="Fill">
+            <ScrollView>
+                <Label
+                    Margin="20"
+                    FontSize="Medium"
+                    HorizontalTextAlignment="Start"
+                    Text="{Binding Name.Description}"
+                    VerticalTextAlignment="Start">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding CloseCommand}" />
+                    </Label.GestureRecognizers>
+                </Label>
+            </ScrollView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

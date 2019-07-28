@@ -6,7 +6,6 @@ using MenoPreDieta.Annotations;
 using MenoPreDieta.Dialogs;
 using MenoPreDieta.Entities;
 using MenoPreDieta.Extensions;
-using MenoPreDieta.Models;
 using MenoPreDieta.Views;
 using Xamarin.Forms;
 
@@ -14,8 +13,8 @@ namespace MenoPreDieta.ViewModels
 {
     public class PickNameViewModel : ViewModel
     {
-        private NameModel first;
-        private NameModel second;
+        private NameEntity first;
+        private NameEntity second;
         private int pairsCount;
         private int remainingPairsCount;
         private double progress;
@@ -39,6 +38,14 @@ namespace MenoPreDieta.ViewModels
             MessagingCenter.Subscribe<RankedNamesViewModel>(
                 this, "PairsUpdated", async sender => await InitializeAsync());
             HideNameDayCommand = new Command(ToggleNameDayVisibility);
+            ShowDescriptionFirstCommand = new Command(
+                async () => await Shell.Current.Navigation.PushAsync(
+                    new NameDescriptionPage(
+                        new NameDescriptionViewModel(First))));
+            ShowDescriptionSecondCommand = new Command(
+                async () => await Shell.Current.Navigation.PushAsync(
+                    new NameDescriptionPage(
+                        new NameDescriptionViewModel(Second))));
             NameDayVisibility = true;
         }
 
@@ -55,7 +62,11 @@ namespace MenoPreDieta.ViewModels
 
         public Command HideNameDayCommand { get; }
 
-        public NameModel First
+        public Command ShowDescriptionFirstCommand { get; }
+
+        public Command ShowDescriptionSecondCommand { get; }
+
+        public NameEntity First
         {
             get => first;
             set
@@ -66,7 +77,7 @@ namespace MenoPreDieta.ViewModels
             }
         }
 
-        public NameModel Second
+        public NameEntity Second
         {
             get => second;
             set
@@ -196,8 +207,8 @@ namespace MenoPreDieta.ViewModels
 
         private void UpdateFirstAndSecondName()
         {
-            First = App.Names.Catalog.NameWithId(App.Names.Picks.Selected.FirstNameId).ToNameModel();
-            Second = App.Names.Catalog.NameWithId(App.Names.Picks.Selected.SecondNameId).ToNameModel();
+            First = App.Names.Catalog.NameWithId(App.Names.Picks.Selected.FirstNameId);
+            Second = App.Names.Catalog.NameWithId(App.Names.Picks.Selected.SecondNameId);
         }
 
         private void UpdateStats()

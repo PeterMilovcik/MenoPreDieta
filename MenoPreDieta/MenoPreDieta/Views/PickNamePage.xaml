@@ -46,7 +46,7 @@
                 FontSize="42"
                 HorizontalOptions="Fill"
                 HorizontalTextAlignment="Center"
-                Text="{Binding First.Name}"
+                Text="{Binding First.Value}"
                 VerticalOptions="Fill"
                 VerticalTextAlignment="Center" />
 
@@ -56,7 +56,7 @@
                 Grid.Column="1"
                 Margin="5"
                 FontSize="Medium"
-                HorizontalOptions="Fill"
+                HorizontalOptions="Center"
                 HorizontalTextAlignment="Center"
                 IsVisible="{Binding NameDayVisibility}"
                 Text="{Binding First.NameDay}"
@@ -70,7 +70,7 @@
                 FontSize="42"
                 HorizontalOptions="Fill"
                 HorizontalTextAlignment="Center"
-                Text="{Binding Second.Name}"
+                Text="{Binding Second.Value}"
                 VerticalOptions="Fill"
                 VerticalTextAlignment="Center" />
 
@@ -80,7 +80,7 @@
                 Grid.Column="2"
                 Margin="5"
                 FontSize="Medium"
-                HorizontalOptions="Fill"
+                HorizontalOptions="Center"
                 HorizontalTextAlignment="Center"
                 IsVisible="{Binding NameDayVisibility}"
                 Text="{Binding Second.NameDay}"

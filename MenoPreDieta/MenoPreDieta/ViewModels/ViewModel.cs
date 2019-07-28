@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using MenoPreDieta.Annotations;
-using MenoPreDieta.Models;
 
 namespace MenoPreDieta.ViewModels
 {

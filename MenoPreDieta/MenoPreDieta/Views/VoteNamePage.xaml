@@ -59,7 +59,7 @@
                 Grid.Column="1"
                 Margin="30"
                 FontSize="Medium"
-                HorizontalOptions="Fill"
+                HorizontalOptions="Center"
                 HorizontalTextAlignment="Center"
                 IsVisible="{Binding NameDayVisibility}"
                 Text="{Binding Name.NameDay}"
@@ -79,27 +79,6 @@
                 ProgressColor="{DynamicResource PrimaryDark}"
                 ScaleY="4"
                 VerticalOptions="End" />
-
-            <StackLayout
-                Grid.Column="0"
-                Grid.ColumnSpan="3"
-                BackgroundColor="White"
-                HorizontalOptions="Fill"
-                IsVisible="{Binding DescriptionVisibility}"
-                VerticalOptions="Fill">
-                <ScrollView>
-                    <Label
-                        Margin="20"
-                        FontSize="Medium"
-                        HorizontalTextAlignment="Start"
-                        Text="{Binding Name.Description}"
-                        VerticalTextAlignment="Start">
-                        <Label.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding ShowDescriptionCommand}" />
-                        </Label.GestureRecognizers>
-                    </Label>
-                </ScrollView>
-            </StackLayout>
 
         </Grid>
     </ContentPage.Content>
